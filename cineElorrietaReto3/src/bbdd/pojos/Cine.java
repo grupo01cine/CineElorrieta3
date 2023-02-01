@@ -16,6 +16,7 @@ public class Cine implements Serializable{
 	private String direccion = "";
 	private String telefono = "";
 	
+	private String prueba = "";
 	
 	public int getCodigo() {
 		return codigo;
