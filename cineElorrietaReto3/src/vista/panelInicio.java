@@ -1,6 +1,9 @@
 package vista;
 
+import bbdd.pojos.Cliente;
+
 import java.awt.EventQueue;
+
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -10,8 +13,13 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Panel;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
 
 public class panelInicio {
+	
+	private ArrayList<Cliente> clientes;
 
 	private JFrame frame;
 	private JTextField textField;
@@ -61,6 +69,12 @@ public class panelInicio {
 		panelInicio.add(textField);
 		
 		JButton btnRegistro = new JButton("Registro");
+		btnRegistro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelRegistro registro = new panelRegistro(clientes);
+				registro.setVisible(true);
+			}
+		});
 		btnRegistro.setBounds(445, 11, 148, 42);
 		panelInicio.add(btnRegistro);
 		
