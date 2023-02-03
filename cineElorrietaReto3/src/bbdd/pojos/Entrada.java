@@ -1,7 +1,8 @@
 package bbdd.pojos;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
+import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Entrada
@@ -16,7 +17,8 @@ public class Entrada implements Serializable{
 	private Pelicula pelicula = null;
 	private Date horario;
 	private Sala sala = null;
-	private float precio = 0;
+	private double precio = 0;
+	
 	public int getCodigo() {
 		return codigo;
 	}
@@ -47,10 +49,10 @@ public class Entrada implements Serializable{
 	public void setSala(Sala sala) {
 		this.sala = sala;
 	}
-	public float getPrecio() {
+	public double getPrecio() {
 		return precio;
 	}
-	public void setPrecio(float precio) {
+	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
 	public static long getSerialversionuid() {
@@ -58,11 +60,29 @@ public class Entrada implements Serializable{
 	}
 	
 	@Override
+	public int hashCode() {
+		return Objects.hash(codigo, fechaCompra, horario, pelicula, precio, sala);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Entrada other = (Entrada) obj;
+		return codigo == other.codigo && Objects.equals(fechaCompra, other.fechaCompra)
+				&& Objects.equals(horario, other.horario) && Objects.equals(pelicula, other.pelicula)
+				&& Double.doubleToLongBits(precio) == Double.doubleToLongBits(other.precio)
+				&& Objects.equals(sala, other.sala);
+	}
+	
+	@Override
 	public String toString() {
 		return "Entrada [codigo=" + codigo + ", fechaCompra=" + fechaCompra + ", pelicula=" + pelicula + ", horario="
 				+ horario + ", sala=" + sala + ", precio=" + precio + "]";
 	}
-
-	
 	
 }

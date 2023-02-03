@@ -14,9 +14,8 @@ public class Cine implements Serializable{
 	
 	private String nombre = "";
 	private String direccion = "";
-	private String telefono = "";
-	
-	private String prueba = "";
+	private int telefono = 0;
+
 	
 	public int getCodigo() {
 		return codigo;
@@ -36,10 +35,10 @@ public class Cine implements Serializable{
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	public String getTelefono() {
+	public int getTelefono() {
 		return telefono;
 	}
-	public void setTelefono(String telefono) {
+	public void setTelefono(int telefono) {
 		this.telefono = telefono;
 	}
 	public static long getSerialversionuid() {
