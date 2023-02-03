@@ -85,6 +85,12 @@ public class panelInicio {
 		panelInicio.add(lblCinesElorrieta);
 		
 		JButton btnIniciar = new JButton("Iniciar");
+		btnIniciar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelSeleccionCine cines = new panelSeleccionCine();
+				cines.setVisible(true);
+			}
+		});
 		btnIniciar.setBounds(338, 170, 190, 68);
 		panelInicio.add(btnIniciar);
 	}
