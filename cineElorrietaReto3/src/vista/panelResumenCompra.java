@@ -75,16 +75,19 @@ public class panelResumenCompra extends JFrame {
 		contentPane.add(btnCancelarResumen);
 		
 		JTextField textFieldTotal = new JTextField();
+		textFieldTotal.setEditable(false);
 		textFieldTotal.setBounds(495, 208, 86, 20);
 		contentPane.add(textFieldTotal);
 		textFieldTotal.setColumns(10);
 		
 		JTextField textFieldDescuento = new JTextField();
+		textFieldDescuento.setEditable(false);
 		textFieldDescuento.setBounds(495, 230, 86, 20);
 		contentPane.add(textFieldDescuento);
 		textFieldDescuento.setColumns(10);
 		
 		JTextField textFieldPrecioTotal = new JTextField();
+		textFieldPrecioTotal.setEditable(false);
 		textFieldPrecioTotal.setBounds(495, 255, 86, 20);
 		contentPane.add(textFieldPrecioTotal);
 		textFieldPrecioTotal.setColumns(10);
