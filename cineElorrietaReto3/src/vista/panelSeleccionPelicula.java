@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -41,31 +43,24 @@ public class panelSeleccionPelicula extends JFrame {
 		JButton btnAceptarSeleccionPelicula = new JButton("Aceptar");
 		btnAceptarSeleccionPelicula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				contentPane.getParent().getParent().getParent().setVisible(false);
+				panelSeleccionCine cines = new panelSeleccionCine();
+				cines.setVisible(true);
+				contentPane.getParent().getParent().getParent().setVisible(false); 
 			}
 		});
-		btnAceptarSeleccionPelicula.setBounds(58, 270, 130, 23);
+		btnAceptarSeleccionPelicula.setBounds(172, 270, 130, 23);
 		contentPane.add(btnAceptarSeleccionPelicula);
 		
 		JButton btnCancelarSeleccionPelicula = new JButton("Cancelar");
 		btnCancelarSeleccionPelicula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panelSeleccionCine cines = new panelSeleccionCine();
-				cines.setVisible(true);
+				panelSeleccionCine cines2 = new panelSeleccionCine();
+				cines2.setVisible(true);
 				contentPane.getParent().getParent().getParent().setVisible(false);
 			}
 		});
-		btnCancelarSeleccionPelicula.setBounds(240, 270, 142, 23);
+		btnCancelarSeleccionPelicula.setBounds(346, 270, 142, 23);
 		contentPane.add(btnCancelarSeleccionPelicula);
-		
-		JButton btnFinalizarCompra = new JButton("Finalizar compra");
-		btnFinalizarCompra.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				contentPane.getParent().getParent().getParent().setVisible(false);
-			}
-		});
-		btnFinalizarCompra.setBounds(430, 270, 130, 23);
-		contentPane.add(btnFinalizarCompra);
 		
 		JList list = new JList();
 		list.setBounds(47, 64, 531, 160);

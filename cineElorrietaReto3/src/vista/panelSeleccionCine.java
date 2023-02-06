@@ -8,12 +8,18 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import bbdd.pojos.Cliente;
+
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class panelSeleccionCine extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
+	
+	private ArrayList<Cliente> clientes;
 
 	private JPanel contentPane;
 
@@ -51,14 +57,16 @@ public class panelSeleccionCine extends JFrame {
 		btnAceptarSeleccionCine.setBounds(94, 208, 188, 23);
 		contentPane.add(btnAceptarSeleccionCine);
 		
-		JButton btnFinalizarSesionSeleccionCine = new JButton("Finalizar sesión");
-		btnFinalizarSesionSeleccionCine.addActionListener(new ActionListener() {
+		JButton btnFinalizarCompra = new JButton("Finalizar compra");
+		btnFinalizarCompra.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				panelResumenCompra resumen = new panelResumenCompra();
+				resumen.setVisible(true);
 				contentPane.getParent().getParent().getParent().setVisible(false);
 			}
 		});
-		btnFinalizarSesionSeleccionCine.setBounds(323, 208, 188, 23);
-		contentPane.add(btnFinalizarSesionSeleccionCine);
+		btnFinalizarCompra.setBounds(323, 208, 188, 23);
+		contentPane.add(btnFinalizarCompra);
 	}
 
 }
