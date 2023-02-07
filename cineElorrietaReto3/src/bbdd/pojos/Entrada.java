@@ -6,9 +6,6 @@ import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Entrada 
- * 
- * Relacion N:1 con la tabla Cliente
- * Relacion N:1 con la tabla Proyeccion
  */
 public class Entrada implements Serializable{
 
@@ -23,6 +20,7 @@ public class Entrada implements Serializable{
 	private double precio = 0;
 	
 	// Atributos de la Relacion 
+	//Relacion N:1 con la tabla Proyeccion
 	private Sala sala = null;	
 	private Pelicula pelicula = null;
 	

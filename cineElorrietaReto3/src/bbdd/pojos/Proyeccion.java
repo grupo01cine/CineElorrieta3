@@ -6,10 +6,6 @@ import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Proyeccion
- * 
- * Relacion N:1 con la tabla Sala
- * Relacion 1:N con la tabla Entrada
- * Relacion N:1 con la tabla Pelicula
  */
 public class Proyeccion implements Serializable{
 
@@ -23,7 +19,9 @@ public class Proyeccion implements Serializable{
 	private Date horario = null;
 	
 	// Atributos de la relacion
+	//  Relacion N:1 con la tabla Sala
 	private Sala sala = null;
+	//  Relacion N:1 con la tabla Pelicula
 	private Pelicula pelicula = null;
 	
 	

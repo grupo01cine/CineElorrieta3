@@ -5,8 +5,6 @@ import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Pelicula
- * 
- * Relacion 1:N con la tabla Proyeccion 
  */
 public class Pelicula implements Serializable{
 
