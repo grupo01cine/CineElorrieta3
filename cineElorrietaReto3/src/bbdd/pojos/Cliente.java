@@ -5,20 +5,22 @@ import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Cliente
+ * 
+ * Relacion 1:N con la tabla Entrada
  */
 public class Cliente implements Serializable{
 
 	private static final long serialVersionUID = -994353513114460752L;
 
+	// Clave primaria
 	private int codigo = 0;
 	
+	// Atributos
 	private String dni = "";
 	private String nombre = "";
 	private String apellido = "";
 	private char sexo = '\0';
 	private String passwd = "";
-	
-	// Atributos de relaciones
 	
 	
 	public int getCodigo() {

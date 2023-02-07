@@ -6,18 +6,26 @@ import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Proyeccion
+ * 
+ * Relacion N:1 con la tabla Sala
+ * Relacion 1:N con la tabla Entrada
+ * Relacion N:1 con la tabla Pelicula
  */
 public class Proyeccion implements Serializable{
 
 	private static final long serialVersionUID = -7358141752621918212L;
 
+	// Clave primaria
 	private int codigo = 0;
 	
+	// Atributos
 	private Date fecha = null;
 	private Date horario = null;
 	
+	// Atributos de la relacion
 	private Sala sala = null;
 	private Pelicula pelicula = null;
+	
 	
 	public int getCodigo() {
 		return codigo;

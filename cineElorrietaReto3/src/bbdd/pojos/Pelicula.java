@@ -5,13 +5,17 @@ import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Pelicula
+ * 
+ * Relacion 1:N con la tabla Proyeccion 
  */
 public class Pelicula implements Serializable{
 
 	private static final long serialVersionUID = 2447190224074521651L;
 	
+	// Clave primaria
 	private int codigo = 0;
 	
+	// Atributos
 	private int duracion = 0;
 	private String genero = "";
 	private double coste = 0;

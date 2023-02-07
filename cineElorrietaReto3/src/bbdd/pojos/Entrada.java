@@ -5,19 +5,27 @@ import java.sql.Date;
 import java.util.Objects;
 
 /**
- * POJO - Describe la tabla Entrada
+ * POJO - Describe la tabla Entrada 
+ * 
+ * Relacion N:1 con la tabla Cliente
+ * Relacion N:1 con la tabla Proyeccion
  */
 public class Entrada implements Serializable{
 
 	private static final long serialVersionUID = 5803034015734968201L;
 
+	// Clave primaria
 	private int codigo = 0;
 	
+	// Atributos
 	private Date fechaCompra;
-	private Pelicula pelicula = null;
-	private Date horario;
-	private Sala sala = null;
+	private Date horario;	
 	private double precio = 0;
+	
+	// Atributos de la Relacion 
+	private Sala sala = null;	
+	private Pelicula pelicula = null;
+	
 	
 	public int getCodigo() {
 		return codigo;

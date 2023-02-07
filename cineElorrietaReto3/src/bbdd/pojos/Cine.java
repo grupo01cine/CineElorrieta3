@@ -5,13 +5,17 @@ import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Cine
+ * 
+ * Relacion 1:N con la tabla Sala
  */
 public class Cine implements Serializable{
 	
 	private static final long serialVersionUID = -4280170159871175756L;
 
+	// Clave primaria
 	private int codigo = 0;
 	
+	// Atributos
 	private String nombre = "";
 	private String direccion = "";
 	private int telefono = 0;
