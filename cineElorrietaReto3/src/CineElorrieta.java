@@ -1,3 +1,6 @@
+import java.awt.EventQueue;
+
+import vista.Ventanas;
 
 public class CineElorrieta {
 
@@ -5,9 +8,20 @@ public class CineElorrieta {
 		
 	}
 
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Ventanas window = new Ventanas();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 }
