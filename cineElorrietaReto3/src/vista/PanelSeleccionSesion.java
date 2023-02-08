@@ -46,7 +46,7 @@ public class PanelSeleccionSesion extends JFrame {
 		btnAceptarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(btnAceptarSesion, "Ha seleccionado la película -meter título o info-", "Confirmación", 1);
-				panelSeleccionCine cines = new panelSeleccionCine();
+				PanelSeleccionCine cines = new PanelSeleccionCine();
 				cines.setVisible(true);
 				contentPane.getParent().getParent().getParent().setVisible(false);
 			}
@@ -57,7 +57,7 @@ public class PanelSeleccionSesion extends JFrame {
 		JButton btnSesion = new JButton("Cancelar");
 		btnSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panelSeleccionPelicula pelis = new panelSeleccionPelicula();
+				PanelSeleccionPelicula pelis = new PanelSeleccionPelicula();
 				pelis.setVisible(true);
 				contentPane.getParent().getParent().getParent().setVisible(false);
 			}

@@ -57,7 +57,7 @@ public class PanelResumenCompra extends JFrame {
 		JButton btnComprarResumen = new JButton("Finalizar compra");
 		btnComprarResumen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panelLogin login = new panelLogin(null);
+				PanelLogin login = new PanelLogin(null);
 				login.setVisible(true);
 				contentPane.getParent().getParent().getParent().setVisible(false);
 			}

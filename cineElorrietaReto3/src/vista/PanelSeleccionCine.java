@@ -49,7 +49,7 @@ public class PanelSeleccionCine extends JFrame {
 		JButton btnAceptarSeleccionCine = new JButton("Aceptar");
 		btnAceptarSeleccionCine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panelSeleccionPelicula peliculas = new panelSeleccionPelicula();
+				PanelSeleccionPelicula peliculas = new PanelSeleccionPelicula();
 				peliculas.setVisible(true);
 				contentPane.getParent().getParent().getParent().setVisible(false);
 			}
@@ -60,7 +60,7 @@ public class PanelSeleccionCine extends JFrame {
 		JButton btnFinalizarCompra = new JButton("Finalizar compra");
 		btnFinalizarCompra.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panelResumenCompra resumen = new panelResumenCompra();
+				PanelResumenCompra resumen = new PanelResumenCompra();
 				resumen.setVisible(true);
 				contentPane.getParent().getParent().getParent().setVisible(false);
 			}

@@ -43,7 +43,7 @@ public class PanelSeleccionPelicula extends JFrame {
 		JButton btnAceptarSeleccionPelicula = new JButton("Aceptar");
 		btnAceptarSeleccionPelicula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panelSeleccionCine cines = new panelSeleccionCine();
+				PanelSeleccionCine cines = new PanelSeleccionCine();
 				cines.setVisible(true);
 				contentPane.getParent().getParent().getParent().setVisible(false); 
 			}
@@ -54,7 +54,7 @@ public class PanelSeleccionPelicula extends JFrame {
 		JButton btnCancelarSeleccionPelicula = new JButton("Cancelar");
 		btnCancelarSeleccionPelicula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panelSeleccionCine cines2 = new panelSeleccionCine();
+				PanelSeleccionCine cines2 = new PanelSeleccionCine();
 				cines2.setVisible(true);
 				contentPane.getParent().getParent().getParent().setVisible(false);
 			}
@@ -62,8 +62,6 @@ public class PanelSeleccionPelicula extends JFrame {
 		btnCancelarSeleccionPelicula.setBounds(346, 270, 142, 23);
 		contentPane.add(btnCancelarSeleccionPelicula);
 		
-		JList list = new JList();
-		list.setBounds(47, 64, 531, 160);
-		contentPane.add(list);
+	
 	}
 }
