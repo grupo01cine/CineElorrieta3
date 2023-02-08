@@ -24,7 +24,8 @@ public class GestorBasesDeDatos {
 		try {
 			Class.forName(BBDDUtils.DRIVER_REMOTO);
 
-			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO, BBDDUtils.PASS_REMOTO);
+			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO,
+					BBDDUtils.PASS_REMOTO);
 
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT * FROM Cine");
@@ -40,7 +41,7 @@ public class GestorBasesDeDatos {
 				// Sacamos las columnas del RS
 				int id = resultSet.getInt("Codigo");
 				String nombre = resultSet.getString("Nombre");
-				String direccion = resultSet.getString("Direccion");				
+				String direccion = resultSet.getString("Direccion");
 
 				// Metemos los datos a Ejemplo
 				cine.setCodigo(id);
@@ -80,7 +81,7 @@ public class GestorBasesDeDatos {
 		return ret;
 	}
 	
-	public ArrayList<Cine> ejemploPrepared(int codigo, String nombreDado) {
+	public ArrayList<Cine> ejemplo(String nombreDado) {
 		ArrayList<Cine> ret = null;
 
 		Connection connection = null;
@@ -88,7 +89,9 @@ public class GestorBasesDeDatos {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		
-		PreparedStatement  preparedStatement  = null;
+		PreparedStatement preparedStatement = null;
+		
+		String sql = "SELECT * FROM Cine Where Nombre = ?";
 
 		try {
 			Class.forName(BBDDUtils.DRIVER_REMOTO);
@@ -96,12 +99,12 @@ public class GestorBasesDeDatos {
 			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO,
 					BBDDUtils.PASS_REMOTO);
 
-
-			// Montamos la SQL. Las ? se rellenan a continuacion
-			String sql = "SELECT * FROM Cine WHERE ";
+			statement = connection.createStatement();
+			
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, codigo);
+			//preparedStatement.setInt(1, codigo);
 			preparedStatement.setString(2, nombreDado);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 
