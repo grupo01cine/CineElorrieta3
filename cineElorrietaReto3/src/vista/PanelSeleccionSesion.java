@@ -13,7 +13,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class panelSeleccionSesion extends JFrame {
+public class PanelSeleccionSesion extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class panelSeleccionSesion extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public panelSeleccionSesion() {
+	public PanelSeleccionSesion() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 632, 390);
 		contentPane = new JPanel();

@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class panelSeleccionCine extends JFrame {
+public class PanelSeleccionCine extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -30,7 +30,7 @@ public class panelSeleccionCine extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public panelSeleccionCine() {
+	public PanelSeleccionCine() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 632, 390);
 		contentPane = new JPanel();

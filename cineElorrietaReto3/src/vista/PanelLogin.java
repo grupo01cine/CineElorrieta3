@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder;
 import bbdd.pojos.Cliente;
 import controlador.GestorUsuarios;
 
-public class panelLogin extends JFrame {
+public class PanelLogin extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +32,7 @@ public class panelLogin extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public panelLogin(ArrayList<Cliente> clientes) {
+	public PanelLogin(ArrayList<Cliente> clientes) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 632, 390);
 		contentPane = new JPanel();
