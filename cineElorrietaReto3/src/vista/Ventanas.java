@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,10 +18,15 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import bbdd.pojos.Cine;
+import controlador.GestorBasesDeDatos;
 import controlador.GestorUsuarios;
 
 public class Ventanas {
 
+	private ArrayList<Cine> cines = null;
+
+	
 	public JFrame frame;
 	public JPanel panelInicio;
 	public JPanel panelSeleccionCine;
@@ -97,16 +103,19 @@ public class Ventanas {
 		labelSeleccionCine.setBounds(57, 102, 202, 22);
 		panelSeleccionCine.add(labelSeleccionCine);
 		
-		JComboBox comboBoxCines = new JComboBox();
+		JComboBox<String> comboBoxCines = new JComboBox<String>();
 		comboBoxCines.setBounds(265, 102, 246, 22);
 		panelSeleccionCine.add(comboBoxCines);
+		GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
+		cines = gestorbbdd.sacarTodosLosCines();
+		for(int i=0; i<cines.size();i++) {
+			String nombre = cines.get(i).getNombre();
+			comboBoxCines.addItem(nombre);
+		}
 		
 		JButton btnAceptarSeleccionCine = new JButton("Aceptar");
 		btnAceptarSeleccionCine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelSeleccionPelicula();
-				
 				panelSeleccionCine.setVisible(false);
 				panelSeleccionPelicula.setVisible(true);
 			}
@@ -117,9 +126,6 @@ public class Ventanas {
 		JButton btnFinalizarCompra = new JButton("Finalizar compra");
 		btnFinalizarCompra.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelResumenCompra();
-				
 				panelSeleccionCine.setVisible(false);
 				panelResumenCompra.setVisible(true);
 			}
