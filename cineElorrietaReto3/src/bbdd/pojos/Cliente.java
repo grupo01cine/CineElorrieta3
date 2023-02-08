@@ -24,42 +24,55 @@ public class Cliente implements Serializable{
 	public int getCodigo() {
 		return codigo;
 	}
+	
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
+	
 	public String getDni() {
 		return dni;
 	}
+	
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
+	
 	public String getNombre() {
 		return nombre;
 	}
+	
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+	
 	public String getApellido() {
 		return apellido;
 	}
+	
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
+	
 	public char getSexo() {
 		return sexo;
 	}
+	
 	public void setSexo(char sexo) {
 		this.sexo = sexo;
 	}
+	
 	public String getPasswd() {
 		return passwd;
 	}
+	
 	public void setPasswd(String passwd) {
 		this.passwd = passwd;
 	}
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
 	
 	@Override
 	public String toString() {

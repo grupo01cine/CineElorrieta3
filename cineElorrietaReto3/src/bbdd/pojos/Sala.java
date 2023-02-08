@@ -1,7 +1,6 @@
 package bbdd.pojos;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -18,8 +17,8 @@ public class Sala implements Serializable{
 	private String nombre = "";
 	
 	// Atributo de la relacion
-	// Relacion 1:N con la tabla Proyeccion
-	private ArrayList<Pelicula> pelicula = null;
+	// Relacion 1:N con la tabla Cine (en un cine hay N salas; 1 sala pertenece a 1 cine)
+	private Cine cine = null;
 
 	public int getCodigo() {
 		return codigo;
@@ -37,12 +36,12 @@ public class Sala implements Serializable{
 		this.nombre = nombre;
 	}
 
-	public ArrayList<Pelicula> getPelicula() {
-		return pelicula;
+	public Cine getCine() {
+		return cine;
 	}
 
-	public void setPelicula(ArrayList<Pelicula> pelicula) {
-		this.pelicula = pelicula;
+	public void setCine(Cine cine) {
+		this.cine = cine;
 	}
 
 	public static long getSerialversionuid() {
@@ -51,7 +50,7 @@ public class Sala implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(codigo, nombre, pelicula);
+		return Objects.hash(cine, codigo, nombre);
 	}
 
 	@Override
@@ -63,13 +62,14 @@ public class Sala implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Sala other = (Sala) obj;
-		return codigo == other.codigo && Objects.equals(nombre, other.nombre)
-				&& Objects.equals(pelicula, other.pelicula);
+		return Objects.equals(cine, other.cine) && codigo == other.codigo && Objects.equals(nombre, other.nombre);
 	}
 
 	@Override
 	public String toString() {
-		return "Sala [codigo=" + codigo + ", nombre=" + nombre + ", pelicula=" + pelicula + "]";
-	}	
+		return "Sala [codigo=" + codigo + ", nombre=" + nombre + ", cine=" + cine + "]";
+	}
+
+	
 	
 }

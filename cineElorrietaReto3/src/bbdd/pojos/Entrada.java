@@ -16,15 +16,13 @@ public class Entrada implements Serializable{
 	
 	// Atributos
 	private Date fechaCompra;
-	private Date horario;	
 	private double precio = 0;
 	
 	// Atributos de la Relacion 
 	//Relacion N:1 con la tabla Proyeccion
-	private Sala sala = null;	
-	private Pelicula pelicula = null;
-	
-	
+	private Proyeccion proyeccion = null;
+	//Relacion N:1 con la tabla Cliente
+	private Cliente cliente = null;
 	public int getCodigo() {
 		return codigo;
 	}
@@ -37,39 +35,31 @@ public class Entrada implements Serializable{
 	public void setFechaCompra(Date fechaCompra) {
 		this.fechaCompra = fechaCompra;
 	}
-	public Pelicula getPelicula() {
-		return pelicula;
-	}
-	public void setPelicula(Pelicula pelicula) {
-		this.pelicula = pelicula;
-	}
-	public Date getHorario() {
-		return horario;
-	}
-	public void setHorario(Date horario) {
-		this.horario = horario;
-	}
-	public Sala getSala() {
-		return sala;
-	}
-	public void setSala(Sala sala) {
-		this.sala = sala;
-	}
 	public double getPrecio() {
 		return precio;
 	}
 	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
+	public Proyeccion getProyeccion() {
+		return proyeccion;
+	}
+	public void setProyeccion(Proyeccion proyeccion) {
+		this.proyeccion = proyeccion;
+	}
+	public Cliente getCliente() {
+		return cliente;
+	}
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
 	@Override
 	public int hashCode() {
-		return Objects.hash(codigo, fechaCompra, horario, pelicula, precio, sala);
+		return Objects.hash(cliente, codigo, fechaCompra, precio, proyeccion);
 	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -79,16 +69,15 @@ public class Entrada implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Entrada other = (Entrada) obj;
-		return codigo == other.codigo && Objects.equals(fechaCompra, other.fechaCompra)
-				&& Objects.equals(horario, other.horario) && Objects.equals(pelicula, other.pelicula)
+		return Objects.equals(cliente, other.cliente) && codigo == other.codigo
+				&& Objects.equals(fechaCompra, other.fechaCompra)
 				&& Double.doubleToLongBits(precio) == Double.doubleToLongBits(other.precio)
-				&& Objects.equals(sala, other.sala);
+				&& Objects.equals(proyeccion, other.proyeccion);
 	}
-	
 	@Override
 	public String toString() {
-		return "Entrada [codigo=" + codigo + ", fechaCompra=" + fechaCompra + ", pelicula=" + pelicula + ", horario="
-				+ horario + ", sala=" + sala + ", precio=" + precio + "]";
+		return "Entrada [codigo=" + codigo + ", fechaCompra=" + fechaCompra + ", precio=" + precio + ", proyeccion="
+				+ proyeccion + ", cliente=" + cliente + "]";
 	}
 	
 }
