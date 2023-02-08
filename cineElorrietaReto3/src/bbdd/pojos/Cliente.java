@@ -5,8 +5,6 @@ import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Cliente
- * 
- * Relacion 1:N con la tabla Entrada
  */
 public class Cliente implements Serializable{
 

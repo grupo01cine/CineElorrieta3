@@ -6,9 +6,6 @@ import java.util.Objects;
 
 /**
  * POJO - Describe la tabla Sala
- * 
- * Relacion N:1 con la tabla Cine 
- * Relacion 1:N con la tabla Proyeccion 
  */
 public class Sala implements Serializable{
 
@@ -21,6 +18,7 @@ public class Sala implements Serializable{
 	private String nombre = "";
 	
 	// Atributo de la relacion
+	// Relacion 1:N con la tabla Proyeccion
 	private ArrayList<Pelicula> pelicula = null;
 
 	public int getCodigo() {
