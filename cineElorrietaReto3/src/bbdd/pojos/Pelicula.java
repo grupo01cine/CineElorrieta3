@@ -15,7 +15,7 @@ public class Pelicula implements Serializable{
 	
 	// Atributos
 	private String titulo = null;
-	private int duracion = 0;
+	private String duracion = null;
 	private String genero = null;
 	private double coste = 0;
 	public int getCodigo() {
@@ -30,10 +30,10 @@ public class Pelicula implements Serializable{
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-	public int getDuracion() {
+	public String getDuracion() {
 		return duracion;
 	}
-	public void setDuracion(int duracion) {
+	public void setDuracion(String duracion) {
 		this.duracion = duracion;
 	}
 	public String getGenero() {

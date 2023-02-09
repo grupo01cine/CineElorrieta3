@@ -17,7 +17,7 @@ public class Cliente implements Serializable{
 	private String dni = "";
 	private String nombre = "";
 	private String apellido = "";
-	private char sexo = '\0';
+	private String sexo = "";
 	private String passwd = "";
 	
 	
@@ -53,11 +53,11 @@ public class Cliente implements Serializable{
 		this.apellido = apellido;
 	}
 	
-	public char getSexo() {
+	public String getSexo() {
 		return sexo;
 	}
 	
-	public void setSexo(char sexo) {
+	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
 	

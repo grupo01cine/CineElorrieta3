@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class panelInicio {
+public class PanelInicio {
 	
 	private ArrayList<Cliente> clientes;
 
@@ -43,7 +43,7 @@ public class panelInicio {
 	/**
 	 * Create the application.
 	 */
-	public panelInicio() {
+	public PanelInicio() {
 		initialize();
 	}
 
@@ -71,7 +71,7 @@ public class panelInicio {
 		JButton btnRegistro = new JButton("Registro");
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panelRegistro registro = new panelRegistro(clientes);
+				PanelRegistro registro = new PanelRegistro(clientes);
 				registro.setVisible(true);
 			}
 		});
@@ -87,7 +87,7 @@ public class panelInicio {
 		JButton btnIniciar = new JButton("Iniciar");
 		btnIniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panelSeleccionCine cines = new panelSeleccionCine();
+				PanelSeleccionCine cines = new PanelSeleccionCine();
 				cines.setVisible(true);
 			}
 		});

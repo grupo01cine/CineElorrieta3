@@ -127,7 +127,7 @@ public class PanelRegistro extends JFrame {
 		nuevoCliente.setNombre(textFieldDNI.getText());
 		nuevoCliente.setApellido(textFieldApellido.getText());
 		String sexo = (String) comboBoxSexo.getSelectedItem();
-		nuevoCliente.setSexo(sexo.charAt(0));
+		nuevoCliente.setSexo(sexo);
 		String contrasena = String.valueOf(((JPasswordField) textFieldPasswd).getPassword());
 		nuevoCliente.setPasswd(contrasena);
 		return nuevoCliente;
