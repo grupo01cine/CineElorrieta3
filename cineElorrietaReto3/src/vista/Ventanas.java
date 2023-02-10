@@ -28,6 +28,8 @@ import bbdd.pojos.Proyeccion;
 import controlador.GestorBasesDeDatos;
 import controlador.GestorUsuarios;
 import javax.swing.JScrollPane;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Ventanas {
 
@@ -69,6 +71,13 @@ public class Ventanas {
 		
 //		Panel Inicio
 		panelInicio = new JPanel();
+		panelInicio.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panelInicio.setVisible(false);
+				panelSeleccionCine.setVisible(true);
+			}
+		});
 		panelInicio.setBounds(0, 0, 616, 351);
 		frame.getContentPane().add(panelInicio);
 		panelInicio.setLayout(null);
@@ -236,7 +245,7 @@ public class Ventanas {
 		JButton btnAceptarSesion = new JButton("Aceptar");
 		btnAceptarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(btnAceptarSesion, "Ha seleccionado la película -meter título o info-", "Confirmación", 1);
+				JOptionPane.showMessageDialog(btnAceptarSesion, "Ha seleccionado la película " + peliculaSeleccionada + " ... ", "Confirmación", 1);
 //				GestorVentanas ventanas = new GestorVentanas();
 //				mostrarPanelSeleccionCine();
 				
