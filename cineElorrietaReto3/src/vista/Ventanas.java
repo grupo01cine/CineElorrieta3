@@ -29,6 +29,7 @@ import controlador.GestorUsuarios;
 
 public class Ventanas {
 
+	private String peliculaSeleccionada=null;
 	private String cineSeleccionado=null;
 	private ArrayList<Cine> cines = null;
 
@@ -175,8 +176,8 @@ public class Ventanas {
 			public void actionPerformed(ActionEvent e) {
 				//Sacamos las fechas de la peli seleccionada en el cine seleccionado
 				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
-				String pelicula = (String) tablePeliculas.getValueAt(tablePeliculas.getSelectedRow(), tablePeliculas.getSelectedColumn());
-				ArrayList<Proyeccion> proyecciones = gestorbbdd.sacarTodasLasFechas(cineSeleccionado, pelicula);
+				peliculaSeleccionada = (String) tablePeliculas.getValueAt(tablePeliculas.getSelectedRow(), tablePeliculas.getSelectedColumn());
+				ArrayList<Proyeccion> proyecciones = gestorbbdd.sacarTodasLasFechas(cineSeleccionado, peliculaSeleccionada);
 				
 				for(int i=0; i<proyecciones.size();i++) {
 					Date fecha = proyecciones.get(i).getFecha();
@@ -268,13 +269,25 @@ public class Ventanas {
 		JButton btnConfirmarFecha = new JButton("Confirmar");
 		btnConfirmarFecha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				Select select = new Select();
+				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
+				Date fecha = (Date) comboBoxFechas.getSelectedItem();
+				ArrayList<Proyeccion> proyecciones = gestorbbdd.sacarTodasLasSesiones(cineSeleccionado, peliculaSeleccionada, fecha);
+
 				//Creamos la tabla de sesiones disponibles para el cine y peli elegidas en la fecha seleccionada
-//				String pelicula = (String) tablePeliculas.getValueAt(tablePeliculas.getSelectedRow(), tablePeliculas.getSelectedColumn());
-//				ArrayList <Proyeccion> = select.getAllProyecciones(cineSeleccionado, pelicula);
+				tableSesiones.removeAll();
+				DefaultTableModel model = (DefaultTableModel) tableSesiones.getModel();
+				model.setRowCount(0);
+				for (int i = 0; i < proyecciones.size(); i++) {
+					Proyeccion proyeccion = proyecciones.get(i);
+					String fechaPr = proyeccion.getFecha().toString();
+					String horarioPr = proyeccion.getHorario().toString();
+					String salaPr = proyeccion.getSala().getNombre();
+					String precioPr = proyeccion.getPrecio().toString();
+
+					model.addRow(new String[] { fechaPr, horarioPr, salaPr, precioPr });
 				
 				
-				
+				}
 			}
 		});
 		btnConfirmarFecha.setBounds(42, 175, 119, 23);

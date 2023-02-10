@@ -12,6 +12,7 @@ import java.util.Date;
 import bbdd.pojos.Cine;
 import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
+import bbdd.pojos.Sala;
 import bbdd.utils.BBDDUtils;
 
 public class GestorBasesDeDatos {
@@ -174,10 +175,10 @@ public class GestorBasesDeDatos {
 	public ArrayList<Pelicula> sacarTodasLasPeliculas(String cine){
 		ArrayList<Pelicula> ret = null;
 		String sql = "SELECT p.* "
-				+ "FROM pelicula p "
-				+ "join proyeccion pr on p.Codigo=pr.Pelicula_Codigo "
-				+ "join sala s on pr.Sala_Codigo=s.Codigo "
-				+ "join cine c on s.Cine_Codigo = c.Codigo "
+				+ "FROM Pelicula p "
+				+ "join Proyeccion pr on p.Codigo=pr.Pelicula_Codigo "
+				+ "join Sala s on pr.Sala_Codigo=s.Codigo "
+				+ "join Cine c on s.Cine_Codigo = c.Codigo "
 				+ "WHERE c.Nombre = '" +cine+"' "
 				+ "GROUP BY p.Titulo ORDER BY pr.Fecha, pr.Horario";
 
@@ -205,7 +206,7 @@ public class GestorBasesDeDatos {
 				int codigo = resultSet.getInt("Codigo");
 				String duracion = getJavaTime(resultSet.getTime("Duracion"));
                 String genero = resultSet.getString("Genero");
-                double coste = resultSet.getDouble("Coste");
+                double coste = resultSet.getDouble("CosteProduccion");
                 String titulo = resultSet.getString("Titulo");
 
                 pelicula.setCodigo(codigo);
@@ -244,11 +245,11 @@ public class GestorBasesDeDatos {
 		ArrayList<Proyeccion> ret=null;
 		
 		String sql = "SELECT pr.* "
-				+ "FROM pelicula p "
-				+ "join proyeccion pr on p.Codigo=pr.Pelicula_Codigo "
-				+ "join sala s on pr.Sala_Codigo=s.Codigo "
-				+ "join cine c on s.Cine_Codigo = c.Codigo "
-				+ "WHERE c.Nombre = '" +cine+"' and p.Titulo = '"+pelicula+"' GROUP BY p.Titulo ORDER BY pr.Fecha, pr.Horario";
+				+ "FROM Pelicula p "
+				+ "join Proyeccion pr on p.Codigo=pr.Pelicula_Codigo "
+				+ "join Sala s on pr.Sala_Codigo=s.Codigo "
+				+ "join Cine c on s.Cine_Codigo = c.Codigo "
+				+ "WHERE c.Nombre = '" +cine+"' and p.Titulo = '"+pelicula+"' GROUP BY Fecha ORDER BY pr.Fecha, pr.Horario";
 
 		Connection connection = null;
 		Statement statement = null;
@@ -275,6 +276,75 @@ public class GestorBasesDeDatos {
 				proyeccion.setCodigo(codigo);
 				proyeccion.setFecha(fecha);
 				proyeccion.setHorario(horario);
+                
+                ret.add(proyeccion);
+			}
+		} catch (SQLException sqle) {  
+			System.out.println("Error con la BBDD - " + sqle.getMessage());
+		} catch(Exception e){ 
+			System.out.println("Error generico - " + e.getMessage());
+		} finally {
+			try {
+				if (resultSet != null) 
+					resultSet.close(); 
+			} catch(Exception e){ 
+			};
+			try {
+				if (statement != null) 
+					statement.close(); 
+			} catch(Exception e){ 
+			};
+			try {
+				if (connection != null) 
+					connection.close(); 
+			} catch(Exception e){ 
+			};					
+		}
+		
+		return ret;
+	}
+	
+	public ArrayList<Proyeccion> sacarTodasLasSesiones(String cine, String pelicula, Date fechaSeleccionada){
+		ArrayList<Proyeccion> ret=null;
+		
+		String sql = "SELECT pr.*, s.Codigo "
+				+ "FROM Pelicula p "
+				+ "join Proyeccion pr on p.Codigo=pr.Pelicula_Codigo "
+				+ "join Sala s on pr.Sala_Codigo=s.Codigo "
+				+ "join Cine c on s.Cine_Codigo = c.Codigo "
+				+ "WHERE c.Nombre = '" +cine+"' and p.Titulo = '"+pelicula+"' and pr.Fecha = '"+fechaSeleccionada+"' ORDER BY pr.Fecha, pr.Horario";
+
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+
+		try {
+			Class.forName(BBDDUtils.DRIVER_REMOTO);
+			
+			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO, BBDDUtils.PASS_REMOTO);
+			statement = connection.createStatement();
+			
+			resultSet = statement.executeQuery(sql);
+
+			while(resultSet.next()) {
+				if (null == ret)
+					ret = new ArrayList<Proyeccion>();
+			
+				Proyeccion proyeccion = new Proyeccion();
+                
+                int codigo = resultSet.getInt("Codigo");
+                java.util.Date fecha = conversionFecha(resultSet.getDate("Fecha"));
+				Date horario = conversionFecha(resultSet.getTime("Horario"));
+				Double precio = resultSet.getDouble("Precio");
+				
+				proyeccion.setCodigo(codigo);
+				proyeccion.setFecha(fecha);
+				proyeccion.setHorario(horario);
+				proyeccion.setPrecio(precio);				
+				
+				Sala sala = new Sala();
+                sala.setCodigo(resultSet.getInt("Sala_Codigo"));
+                proyeccion.setSala(sala);
                 
                 ret.add(proyeccion);
 			}
