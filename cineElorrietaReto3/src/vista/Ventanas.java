@@ -30,6 +30,9 @@ import controlador.GestorUsuarios;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
+import java.awt.Color;
 
 public class Ventanas {
 
@@ -65,6 +68,7 @@ public class Ventanas {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventanas.class.getResource("/img/logo.png")));
 		frame.setBounds(100, 100, 632, 390);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -81,13 +85,6 @@ public class Ventanas {
 		panelInicio.setBounds(0, 0, 616, 351);
 		frame.getContentPane().add(panelInicio);
 		panelInicio.setLayout(null);
-		
-		JTextField textField = new JTextField();
-		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		textField.setBounds(51, 99, 220, 185);
-		textField.setText("Logo");
-		textField.setColumns(10);
-		panelInicio.add(textField);
 		
 		JButton btnRegistro = new JButton("Registro");
 		btnRegistro.addActionListener(new ActionListener() {
@@ -114,6 +111,18 @@ public class Ventanas {
 		});
 		btnIniciar.setBounds(338, 170, 190, 68);
 		panelInicio.add(btnIniciar);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelInicio.setVisible(false);
+				panelSeleccionCine.setVisible(true);
+			}
+		});
+		btnNewButton.setBackground(Color.WHITE);
+		btnNewButton.setIcon(new ImageIcon(Ventanas.class.getResource("/img/logo.png")));
+		btnNewButton.setBounds(32, 44, 268, 256);
+		panelInicio.add(btnNewButton);
 		
 //		panel Seleccion Cine
 		panelSeleccionCine = new JPanel();
