@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -26,6 +27,7 @@ import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import controlador.GestorBasesDeDatos;
 import controlador.GestorUsuarios;
+import javax.swing.JScrollPane;
 
 public class Ventanas {
 
@@ -139,8 +141,9 @@ public class Ventanas {
 				for (int i = 0; i < peliculas.size(); i++) {
 					Pelicula pelicula = peliculas.get(i);
 					String titulo = pelicula.getTitulo();
+					String duracion = pelicula.getDuracion().toString();
 
-					model.addRow(new String[] { titulo });
+					model.addRow(new String[] { titulo, duracion });
 				}
 				
 				panelSeleccionCine.setVisible(false);
@@ -178,8 +181,8 @@ public class Ventanas {
 				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
 				peliculaSeleccionada = (String) tablePeliculas.getValueAt(tablePeliculas.getSelectedRow(), tablePeliculas.getSelectedColumn());
 				ArrayList<Proyeccion> proyecciones = gestorbbdd.sacarTodasLasFechas(cineSeleccionado, peliculaSeleccionada);
-				
-				for(int i=0; i<proyecciones.size();i++) {
+				comboBoxFechas.removeAllItems();
+				for(int i=0; i<proyecciones.size();i++) {					
 					Date fecha = proyecciones.get(i).getFecha();
 					comboBoxFechas.addItem(fecha);
 				}
@@ -204,17 +207,20 @@ public class Ventanas {
 		btnCancelarSeleccionPelicula.setBounds(346, 270, 142, 23);
 		panelSeleccionPelicula.add(btnCancelarSeleccionPelicula);
 		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(47, 64, 531, 160);
+		panelSeleccionPelicula.add(scrollPane_1);
+		
 		tablePeliculas = new JTable();
+		scrollPane_1.setViewportView(tablePeliculas);
 		tablePeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tablePeliculas.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"Titulo"
+				"Titulo", "Duraccion"
 			}
 		));
-		tablePeliculas.setBounds(47, 64, 531, 160);
-		panelSeleccionPelicula.add(tablePeliculas);
 
 //		Panel Seleccion Sesion
 		panelSeleccionSesion = new JPanel();
@@ -226,17 +232,6 @@ public class Ventanas {
 		JLabel lblSesiones = new JLabel("Seleccione una sesión...");
 		lblSesiones.setBounds(236, 18, 179, 14);
 		panelSeleccionSesion.add(lblSesiones);
-		
-		tableSesiones = new JTable();
-		tableSesiones.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Horario", "Precio", "Sala"
-			}
-		));
-		tableSesiones.setBounds(236, 43, 370, 227);
-		panelSeleccionSesion.add(tableSesiones);
 		
 		JButton btnAceptarSesion = new JButton("Aceptar");
 		btnAceptarSesion.addActionListener(new ActionListener() {
@@ -298,6 +293,20 @@ public class Ventanas {
 		});
 		btnConfirmarFecha.setBounds(42, 175, 119, 23);
 		panelSeleccionSesion.add(btnConfirmarFecha);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(236, 43, 370, 227);
+		panelSeleccionSesion.add(scrollPane);
+		
+		tableSesiones = new JTable();
+		scrollPane.setViewportView(tableSesiones);
+		tableSesiones.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Horario", "Precio", "Sala"
+			}
+		));
 		
 //		Panel Resumen Compra
 		panelResumenCompra = new JPanel();
@@ -514,17 +523,4 @@ public class Ventanas {
 		
 		
 	}
-	
-//	private Cliente generarNuevoCliente() {
-//		Cliente nuevoCliente = new Cliente();
-//		nuevoCliente.setCodigo(0);
-//		nuevoCliente.setNombre(textFieldDNI.getText());
-//		nuevoCliente.setApellido(textFieldApellido.getText());
-//		String sexo = (String) comboBoxSexo.getSelectedItem();
-//		nuevoCliente.setSexo(sexo.charAt(0));
-//		String contrasena = String.valueOf(((JPasswordField) textFieldPasswd).getPassword());
-//		nuevoCliente.setPasswd(contrasena);
-//		return nuevoCliente;
-//	}
-
 }

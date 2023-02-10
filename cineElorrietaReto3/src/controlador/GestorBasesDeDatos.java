@@ -206,7 +206,7 @@ public class GestorBasesDeDatos {
 				Pelicula pelicula = new Pelicula();
 				
 				int codigo = resultSet.getInt("Codigo");
-				String duracion = getJavaTime(resultSet.getTime("Duracion"));
+				LocalTime duracion = resultSet.getTime("Duracion").toLocalTime();
                 String genero = resultSet.getString("Genero");
                 double coste = resultSet.getDouble("CosteProduccion");
                 String titulo = resultSet.getString("Titulo");

@@ -1,6 +1,7 @@
 package bbdd.pojos;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.Objects;
 
 /**
@@ -15,7 +16,7 @@ public class Pelicula implements Serializable{
 	
 	// Atributos
 	private String titulo = null;
-	private String duracion = null;
+	private LocalTime duracion = null;
 	private String genero = null;
 	private double coste = 0;
 	public int getCodigo() {
@@ -30,10 +31,10 @@ public class Pelicula implements Serializable{
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-	public String getDuracion() {
+	public LocalTime getDuracion() {
 		return duracion;
 	}
-	public void setDuracion(String duracion) {
+	public void setDuracion(LocalTime duracion) {
 		this.duracion = duracion;
 	}
 	public String getGenero() {
