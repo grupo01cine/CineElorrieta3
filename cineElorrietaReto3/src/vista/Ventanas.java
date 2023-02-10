@@ -228,6 +228,13 @@ public class Ventanas {
 		panelSeleccionSesion.add(lblSesiones);
 		
 		tableSesiones = new JTable();
+		tableSesiones.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Horario", "Precio", "Sala"
+			}
+		));
 		tableSesiones.setBounds(236, 43, 370, 227);
 		panelSeleccionSesion.add(tableSesiones);
 		
@@ -279,12 +286,11 @@ public class Ventanas {
 				model.setRowCount(0);
 				for (int i = 0; i < proyecciones.size(); i++) {
 					Proyeccion proyeccion = proyecciones.get(i);
-					String fechaPr = proyeccion.getFecha().toString();
 					String horarioPr = proyeccion.getHorario().toString();
-					String salaPr = proyeccion.getSala().getNombre();
+					int salaPr = proyeccion.getSala().getCodigo();
 					String precioPr = proyeccion.getPrecio().toString();
 
-					model.addRow(new String[] { fechaPr, horarioPr, salaPr, precioPr });
+					model.addRow(new String[] {  horarioPr, precioPr, Integer.toString(salaPr) });
 				
 				
 				}

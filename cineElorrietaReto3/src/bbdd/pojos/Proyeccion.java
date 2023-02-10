@@ -1,6 +1,7 @@
 package bbdd.pojos;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ public class Proyeccion implements Serializable{
 	
 	// Atributos
 	private Date fecha = null;
-	private Date horario = null;
+	private LocalTime horario = null;
 	private Double precio = (double) 0;
 	
 	// Atributos de la relacion
@@ -37,10 +38,10 @@ public class Proyeccion implements Serializable{
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-	public Date getHorario() {
+	public LocalTime getHorario() {
 		return horario;
 	}
-	public void setHorario(Date horario) {
+	public void setHorario(LocalTime horario) {
 		this.horario = horario;
 	}
 	public Double getPrecio() {

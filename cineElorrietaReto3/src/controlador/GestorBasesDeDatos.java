@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -270,8 +272,8 @@ public class GestorBasesDeDatos {
 				Proyeccion proyeccion = new Proyeccion();
                 
                 int codigo = resultSet.getInt("Codigo");
-                java.util.Date fecha = conversionFecha(resultSet.getDate("Fecha"));
-				Date horario = conversionFecha(resultSet.getTime("Horario"));
+                java.util.Date fecha = resultSet.getDate("Fecha");
+				LocalTime horario = resultSet.getTime("Horario").toLocalTime();
 				
 				proyeccion.setCodigo(codigo);
 				proyeccion.setFecha(fecha);
@@ -305,6 +307,8 @@ public class GestorBasesDeDatos {
 	}
 	
 	public ArrayList<Proyeccion> sacarTodasLasSesiones(String cine, String pelicula, Date fechaSeleccionada){
+		
+		java.sql.Date fechasql = conversionFecha(fechaSeleccionada);
 		ArrayList<Proyeccion> ret=null;
 		
 		String sql = "SELECT pr.*, s.Codigo "
@@ -312,7 +316,7 @@ public class GestorBasesDeDatos {
 				+ "join Proyeccion pr on p.Codigo=pr.Pelicula_Codigo "
 				+ "join Sala s on pr.Sala_Codigo=s.Codigo "
 				+ "join Cine c on s.Cine_Codigo = c.Codigo "
-				+ "WHERE c.Nombre = '" +cine+"' and p.Titulo = '"+pelicula+"' and pr.Fecha = '"+fechaSeleccionada+"' ORDER BY pr.Fecha, pr.Horario";
+				+ "WHERE c.Nombre = '" +cine+"' and p.Titulo = '"+pelicula+"' and pr.Fecha = '"+fechasql+"' ORDER BY pr.Fecha, pr.Horario";
 
 		Connection connection = null;
 		Statement statement = null;
@@ -334,10 +338,13 @@ public class GestorBasesDeDatos {
                 
                 int codigo = resultSet.getInt("Codigo");
                 java.util.Date fecha = conversionFecha(resultSet.getDate("Fecha"));
-				Date horario = conversionFecha(resultSet.getTime("Horario"));
+                
+//        		SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss");
+        		
+				LocalTime horario = resultSet.getTime("Horario").toLocalTime();
+				
 				Double precio = resultSet.getDouble("Precio");
 				
-				proyeccion.setCodigo(codigo);
 				proyeccion.setFecha(fecha);
 				proyeccion.setHorario(horario);
 				proyeccion.setPrecio(precio);				
