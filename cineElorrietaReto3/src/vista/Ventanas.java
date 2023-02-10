@@ -5,6 +5,7 @@ import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,14 +17,19 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 import bbdd.pojos.Cine;
+import bbdd.pojos.Pelicula;
+import bbdd.pojos.Proyeccion;
 import controlador.GestorBasesDeDatos;
 import controlador.GestorUsuarios;
 
 public class Ventanas {
 
+	private String cineSeleccionado=null;
 	private ArrayList<Cine> cines = null;
 
 	
@@ -35,6 +41,11 @@ public class Ventanas {
 	public JPanel panelResumenCompra;
 	public JPanel panelRegistro;
 	public JPanel panelLogin;
+	private JTable tablePeliculas;
+	private JComboBox<String> comboBoxCines;
+	private JComboBox<Date> comboBoxFechas;
+	private JTable tableSesiones;
+
 
 
 	/**
@@ -103,7 +114,7 @@ public class Ventanas {
 		labelSeleccionCine.setBounds(57, 102, 202, 22);
 		panelSeleccionCine.add(labelSeleccionCine);
 		
-		JComboBox<String> comboBoxCines = new JComboBox<String>();
+		comboBoxCines = new JComboBox<String>();
 		comboBoxCines.setBounds(265, 102, 246, 22);
 		panelSeleccionCine.add(comboBoxCines);
 		GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
@@ -116,6 +127,21 @@ public class Ventanas {
 		JButton btnAceptarSeleccionCine = new JButton("Aceptar");
 		btnAceptarSeleccionCine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
+				cineSeleccionado = (String) comboBoxCines.getSelectedItem();
+				ArrayList<Pelicula> peliculas= gestorbbdd.sacarTodasLasPeliculas(cineSeleccionado);
+		
+				//Creación de la tabla de películas por cine (en panel PELICULA)
+				tablePeliculas.removeAll();
+				DefaultTableModel model = (DefaultTableModel) tablePeliculas.getModel();
+				model.setRowCount(0);
+				for (int i = 0; i < peliculas.size(); i++) {
+					Pelicula pelicula = peliculas.get(i);
+					String titulo = pelicula.getTitulo();
+
+					model.addRow(new String[] { titulo });
+				}
+				
 				panelSeleccionCine.setVisible(false);
 				panelSeleccionPelicula.setVisible(true);
 			}
@@ -133,7 +159,7 @@ public class Ventanas {
 		btnFinalizarCompra.setBounds(323, 208, 188, 23);
 		panelSeleccionCine.add(btnFinalizarCompra);
 		
-////		Panel Selección Pelicula
+//		Panel Selección Pelicula
 		panelSeleccionPelicula = new JPanel();
 		panelSeleccionPelicula.setBounds(0, 0, 616, 351);
 		frame.getContentPane().add(panelSeleccionPelicula);
@@ -147,8 +173,15 @@ public class Ventanas {
 		JButton btnAceptarSeleccionPelicula = new JButton("Aceptar");
 		btnAceptarSeleccionPelicula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelSeleccionSesion();
+				//Sacamos las fechas de la peli seleccionada en el cine seleccionado
+				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
+				String pelicula = (String) tablePeliculas.getValueAt(tablePeliculas.getSelectedRow(), tablePeliculas.getSelectedColumn());
+				ArrayList<Proyeccion> proyecciones = gestorbbdd.sacarTodasLasFechas(cineSeleccionado, pelicula);
+				
+				for(int i=0; i<proyecciones.size();i++) {
+					Date fecha = proyecciones.get(i).getFecha();
+					comboBoxFechas.addItem(fecha);
+				}
 				
 				panelSeleccionPelicula.setVisible(false);
 				panelSeleccionSesion.setVisible(true);
@@ -170,9 +203,17 @@ public class Ventanas {
 		btnCancelarSeleccionPelicula.setBounds(346, 270, 142, 23);
 		panelSeleccionPelicula.add(btnCancelarSeleccionPelicula);
 		
-		JList list = new JList();
-		list.setBounds(47, 64, 531, 160);
-		panelSeleccionPelicula.add(list);
+		tablePeliculas = new JTable();
+		tablePeliculas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tablePeliculas.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Titulo"
+			}
+		));
+		tablePeliculas.setBounds(47, 64, 531, 160);
+		panelSeleccionPelicula.add(tablePeliculas);
 
 //		Panel Seleccion Sesion
 		panelSeleccionSesion = new JPanel();
@@ -182,11 +223,11 @@ public class Ventanas {
 		panelSeleccionSesion.setVisible(false);
 		
 		JLabel lblSesiones = new JLabel("Seleccione una sesión...");
-		lblSesiones.setBounds(238, 23, 179, 14);
+		lblSesiones.setBounds(236, 18, 179, 14);
 		panelSeleccionSesion.add(lblSesiones);
 		
-		JTable tableSesiones = new JTable();
-		tableSesiones.setBounds(10, 43, 596, 227);
+		tableSesiones = new JTable();
+		tableSesiones.setBounds(236, 43, 370, 227);
 		panelSeleccionSesion.add(tableSesiones);
 		
 		JButton btnAceptarSesion = new JButton("Aceptar");
@@ -215,6 +256,29 @@ public class Ventanas {
 		});
 		btnSesion.setBounds(350, 287, 89, 23);
 		panelSeleccionSesion.add(btnSesion);
+		
+		JLabel lblElegirFecha = new JLabel("Seleccione una fecha:");
+		lblElegirFecha.setBounds(10, 107, 190, 14);
+		panelSeleccionSesion.add(lblElegirFecha);
+		
+		comboBoxFechas = new JComboBox<Date>();
+		comboBoxFechas.setBounds(10, 132, 190, 22);
+		panelSeleccionSesion.add(comboBoxFechas);
+		
+		JButton btnConfirmarFecha = new JButton("Confirmar");
+		btnConfirmarFecha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				Select select = new Select();
+				//Creamos la tabla de sesiones disponibles para el cine y peli elegidas en la fecha seleccionada
+//				String pelicula = (String) tablePeliculas.getValueAt(tablePeliculas.getSelectedRow(), tablePeliculas.getSelectedColumn());
+//				ArrayList <Proyeccion> = select.getAllProyecciones(cineSeleccionado, pelicula);
+				
+				
+				
+			}
+		});
+		btnConfirmarFecha.setBounds(42, 175, 119, 23);
+		panelSeleccionSesion.add(btnConfirmarFecha);
 		
 //		Panel Resumen Compra
 		panelResumenCompra = new JPanel();
