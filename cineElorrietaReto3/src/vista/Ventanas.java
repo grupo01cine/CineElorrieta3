@@ -38,6 +38,8 @@ public class Ventanas {
 
 	private String peliculaSeleccionada=null;
 	private String cineSeleccionado=null;
+	private Date fechaSeleccionada=null;
+	private LocalTime horaSeleccionada=null;
 	private ArrayList<Cine> cines = null;
 
 	
@@ -68,6 +70,7 @@ public class Ventanas {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventanas.class.getResource("/img/logo.png")));
 		frame.setBounds(100, 100, 632, 390);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -112,17 +115,10 @@ public class Ventanas {
 		btnIniciar.setBounds(338, 170, 190, 68);
 		panelInicio.add(btnIniciar);
 		
-		JButton btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				panelInicio.setVisible(false);
-				panelSeleccionCine.setVisible(true);
-			}
-		});
-		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.setIcon(new ImageIcon(Ventanas.class.getResource("/img/logo.png")));
-		btnNewButton.setBounds(32, 44, 268, 256);
-		panelInicio.add(btnNewButton);
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(Ventanas.class.getResource("/img/logo.png")));
+		lblNewLabel.setBounds(45, 61, 305, 279);
+		panelInicio.add(lblNewLabel);
 		
 //		panel Seleccion Cine
 		panelSeleccionCine = new JPanel();
@@ -178,8 +174,18 @@ public class Ventanas {
 				panelResumenCompra.setVisible(true);
 			}
 		});
-		btnFinalizarCompra.setBounds(323, 208, 188, 23);
+		btnFinalizarCompra.setBounds(401, 25, 188, 23);
 		panelSeleccionCine.add(btnFinalizarCompra);
+		
+		JButton btnCancelarSeleccionCine = new JButton("Cancelar");
+		btnCancelarSeleccionCine.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelSeleccionCine.setVisible(false);
+				panelInicio.setVisible(true);
+			}
+		});
+		btnCancelarSeleccionCine.setBounds(341, 208, 188, 23);
+		panelSeleccionCine.add(btnCancelarSeleccionCine);
 		
 //		Panel Selección Pelicula
 		panelSeleccionPelicula = new JPanel();
@@ -189,7 +195,7 @@ public class Ventanas {
 		panelSeleccionPelicula.setVisible(false);
 		
 		JLabel lblSeleccionPelicula = new JLabel("Seleccione una película...");
-		lblSeleccionPelicula.setBounds(47, 34, 180, 14);
+		lblSeleccionPelicula.setBounds(47, 62, 180, 14);
 		panelSeleccionPelicula.add(lblSeleccionPelicula);
 		
 		JButton btnAceptarSeleccionPelicula = new JButton("Aceptar");
@@ -226,7 +232,7 @@ public class Ventanas {
 		panelSeleccionPelicula.add(btnCancelarSeleccionPelicula);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(47, 64, 531, 160);
+		scrollPane_1.setBounds(47, 87, 531, 160);
 		panelSeleccionPelicula.add(scrollPane_1);
 		
 		tablePeliculas = new JTable();
@@ -254,10 +260,10 @@ public class Ventanas {
 		JButton btnAceptarSesion = new JButton("Aceptar");
 		btnAceptarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(btnAceptarSesion, "Ha seleccionado la película " + peliculaSeleccionada + " ... ", "Confirmación", 1);
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelSeleccionCine();
-				
+				int fila = tableSesiones.getSelectedRow();
+				String hora = (String) tableSesiones.getValueAt(fila, 0);
+				JOptionPane.showMessageDialog(btnAceptarSesion, "Ha seleccionado la película " + peliculaSeleccionada + " a fecha de " +fechaSeleccionada + " a las "+hora, "Confirmación", 1);
+
 				panelSeleccionSesion.setVisible(false);
 				panelSeleccionCine.setVisible(true);
 			}
@@ -268,9 +274,7 @@ public class Ventanas {
 		JButton btnSesion = new JButton("Cancelar");
 		btnSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelSeleccionPelicula();
-				
+
 				panelSeleccionSesion.setVisible(false);
 				panelSeleccionPelicula.setVisible(true);
 			}
@@ -290,8 +294,8 @@ public class Ventanas {
 		btnConfirmarFecha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
-				Date fecha = (Date) comboBoxFechas.getSelectedItem();
-				ArrayList<Proyeccion> proyecciones = gestorbbdd.sacarTodasLasSesiones(cineSeleccionado, peliculaSeleccionada, fecha);
+				fechaSeleccionada = (Date) comboBoxFechas.getSelectedItem();
+				ArrayList<Proyeccion> proyecciones = gestorbbdd.sacarTodasLasSesiones(cineSeleccionado, peliculaSeleccionada, fechaSeleccionada);
 
 				//Creamos la tabla de sesiones disponibles para el cine y peli elegidas en la fecha seleccionada
 				tableSesiones.removeAll();
@@ -356,9 +360,6 @@ public class Ventanas {
 		JButton btnComprarResumen = new JButton("Finalizar compra");
 		btnComprarResumen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelLogin();
-				
 				panelResumenCompra.setVisible(false);
 				panelLogin.setVisible(true);
 			}
@@ -369,9 +370,6 @@ public class Ventanas {
 		JButton btnCancelarResumen = new JButton("Cancelar");
 		btnCancelarResumen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelInicio();
-				
 				panelResumenCompra.setVisible(false);
 				panelInicio.setVisible(true);
 			}
@@ -459,11 +457,9 @@ public class Ventanas {
 			public void actionPerformed(ActionEvent e) {
 //				Aquí puedo controlar si ya existe el usuario
 //				Cliente cliente = generarNuevoCliente();
-//				GestorUsuarios gestor = new GestorUsuarios();
-//				gestor.registroUsuario(cliente);
+
 				JOptionPane.showMessageDialog(btnAceptarRegistro, "Usuario creado correctamente", "Confirmación", 1);
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelInicio();
+
 				
 				panelRegistro.setVisible(false);
 				panelInicio.setVisible(true);
@@ -475,8 +471,7 @@ public class Ventanas {
 		JButton btnCancelarRegistro = new JButton("Cancelar");
 		btnCancelarRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelInicio();
+
 				
 				panelRegistro.setVisible(false);
 				panelInicio.setVisible(true);
@@ -529,8 +524,7 @@ public class Ventanas {
 		JButton btnCancelarInicioSesion = new JButton("Cancelar");
 		btnCancelarInicioSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelInicio();
+
 				
 				panelLogin.setVisible(false);
 				panelInicio.setVisible(true);
