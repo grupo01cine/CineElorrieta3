@@ -12,10 +12,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import bbdd.pojos.Cine;
+import bbdd.pojos.Cliente;
 import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import bbdd.pojos.Sala;
+import bbdd.pojos.Entrada;
 import bbdd.utils.BBDDUtils;
+
 
 public class GestorBasesDeDatos {
 	
@@ -352,6 +355,153 @@ public class GestorBasesDeDatos {
 				Sala sala = new Sala();
                 sala.setCodigo(resultSet.getInt("Sala_Codigo"));
                 proyeccion.setSala(sala);
+                
+                ret.add(proyeccion);
+			}
+		} catch (SQLException sqle) {  
+			System.out.println("Error con la BBDD - " + sqle.getMessage());
+		} catch(Exception e){ 
+			System.out.println("Error generico - " + e.getMessage());
+		} finally {
+			try {
+				if (resultSet != null) 
+					resultSet.close(); 
+			} catch(Exception e){ 
+			};
+			try {
+				if (statement != null) 
+					statement.close(); 
+			} catch(Exception e){ 
+			};
+			try {
+				if (connection != null) 
+					connection.close(); 
+			} catch(Exception e){ 
+			};					
+		}
+		
+		return ret;
+	}
+	
+	public void insertarClienteBBDD (Cliente cliente){
+		
+		Connection connection = null;
+		Statement statement = null;
+		
+		try {
+			Class.forName(BBDDUtils.DRIVER_REMOTO);
+			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO, BBDDUtils.PASS_REMOTO);
+			statement = connection.createStatement();
+			
+			String sql = "insert into Cliente (DNI, Nombre, Apellido, Sexo, Contrasena) VALUES ('" +  
+					cliente.getDni() + "', '" + 
+					cliente.getNombre() + "', '" + 
+					cliente.getApellido() + "', '" + 
+					cliente.getSexo() + "', '" + 
+					cliente.getPasswd() + "')";
+			
+			statement.executeUpdate(sql);
+			
+		} catch (SQLException sqle) {  
+			System.out.println("Error con la BBDD - " + sqle.getMessage());
+		} catch(Exception e){ 
+			System.out.println("Error generico - " + e.getMessage());
+		} finally {
+			try {
+				if (statement != null) 
+					statement.close(); 
+			} catch(Exception e){ 			
+			};
+			try {
+				if (connection != null) 
+					connection.close(); 
+			} catch(Exception e){ 
+			};					
+		}
+	}
+	
+	public void insertarEntrada (Cliente cliente, Proyeccion proyeccion){
+		
+		Connection connection = null;
+		Statement statement = null;
+		
+		try {
+			Class.forName(BBDDUtils.DRIVER_REMOTO);
+			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO, BBDDUtils.PASS_REMOTO);
+			statement = connection.createStatement();
+			
+			Date date = new Date();
+			
+	        String sql = "insert into Entrada (Proyeccion_Codigo, Cliente_Codigo, Fecha_compra) VALUES ('" +  
+					date + "', '" + 
+	        		proyeccion.getCodigo() + "', '" + 
+					cliente.getCodigo()+ "')";
+			statement.executeUpdate(sql);
+			
+		} catch (SQLException sqle) {  
+			System.out.println("Error con la BBDD - " + sqle.getMessage());
+		} catch(Exception e){ 
+			System.out.println("Error generico - " + e.getMessage());
+		} finally {
+			try {
+				if (statement != null) 
+					statement.close(); 
+			} catch(Exception e){ 			
+			};
+			try {
+				if (connection != null) 
+					connection.close(); 
+			} catch(Exception e){ 
+			};					
+		}
+	}
+	
+	public ArrayList<Proyeccion> sacarResumen(Cliente cliente){
+	
+		ArrayList<Proyeccion> ret=null;
+		String sql = "SELECT pr.*\r\n"
+				+ "FROM Proyeccion pr "
+				+ "join Sala s on pr.Sala_Codigo=s.Codigo "
+				+ "join Entrada e on e.Proyeccion_Codigo = pr.Codigo "
+				+ "join Cliente c on e.Cliente_Codigo = c.Codigo\r\n"
+				+ "WHERE c.DNI = '" + cliente.getDni() +"'";
+
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+
+		try {
+			Class.forName(BBDDUtils.DRIVER_REMOTO);
+			
+			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO, BBDDUtils.PASS_REMOTO);
+			statement = connection.createStatement();
+			
+			resultSet = statement.executeQuery(sql);
+
+			while(resultSet.next()) {
+				if (null == ret)
+					ret = new ArrayList<Proyeccion>();
+			
+				Proyeccion proyeccion = new Proyeccion();
+                
+              int codigo = resultSet.getInt("Codigo");
+              java.util.Date fecha = conversionFecha(resultSet.getDate("Fecha"));         		
+				LocalTime horario = resultSet.getTime("Horario").toLocalTime();
+				Double precio = resultSet.getDouble("Precio");
+				
+				proyeccion.setCodigo(codigo);
+				proyeccion.setFecha(fecha);
+				proyeccion.setHorario(horario);
+				proyeccion.setPrecio(precio);				
+				
+				Pelicula pelicula = new Pelicula();
+				pelicula.setCodigo(resultSet.getInt("Pelicula_Codigo"));
+                proyeccion.setPelicula(pelicula);
+  
+				Sala sala = new Sala();
+                sala.setCodigo(resultSet.getInt("Sala_Codigo"));
+                proyeccion.setSala(sala);
+               
                 
                 ret.add(proyeccion);
 			}
