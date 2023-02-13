@@ -472,17 +472,25 @@ public class Ventanas {
 				
 				Cliente nuevoCliente = gestor.generarNuevoCliente(dni, nombre, apellido, sexo, contrasena);
 				
-//				Comprobamos si el usuario ya existe
-		
-				//Metemos al cliente en la BBDD
 				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
-				gestorbbdd.insertarClienteBBDD(nuevoCliente);
-
-				//Panel de confirmación
-				JOptionPane.showMessageDialog(btnAceptarRegistro, "Usuario creado correctamente", "Confirmación", 1);
-
-				panelRegistro.setVisible(false);
-				panelInicio.setVisible(true);
+				if(gestorbbdd.comprobarClienteExiste(nuevoCliente)) {
+					// Comprobamos si el usuario ya existe
+					JOptionPane.showMessageDialog(btnAceptarRegistro, "El usuario ya existe", "Aviso", 1);
+					
+					textFieldDNI.setText("");
+					textFieldNombre.setText("");
+					textFieldApellido.setText("");				
+					textFieldPasswd.setText("");
+					
+				}else {
+					//Metemos al cliente en la BBDD					
+					gestorbbdd.insertarClienteBBDD(nuevoCliente);
+					//Panel de confirmación
+					JOptionPane.showMessageDialog(btnAceptarRegistro, "Usuario creado correctamente", "Confirmación", 1);						
+					
+					panelRegistro.setVisible(false);
+					panelInicio.setVisible(true);
+				}														
 			}
 		});
 		btnAceptarRegistro.setBounds(200, 271, 89, 23);
