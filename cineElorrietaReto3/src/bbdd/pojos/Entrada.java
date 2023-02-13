@@ -85,8 +85,5 @@ public class Entrada implements Serializable {
 		return "Entrada [codigo=" + codigo + ", fechaCompra=" + fechaCompra + ", horaCompra=" + horaCompra
 				+ ", proyeccion=" + proyeccion + ", cliente=" + cliente + "]";
 	}
-	
-	
-	
-	
+		
 }
