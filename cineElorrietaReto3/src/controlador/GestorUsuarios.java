@@ -10,14 +10,16 @@ import bbdd.pojos.Cliente;
 
 public class GestorUsuarios {
 	
-	public void registroUsuario(Cliente cliente) {
-		
-//				Meter en la BD
-		System.out.println("Falta la BD");
-		
-
-		//Meter esta info en el array y en la BD
+	public Cliente generarNuevoCliente(String dni, String nombre, String apellido, String sexo, String passwrd) {
+		Cliente ret = new Cliente();
+		ret.setDni(dni);
+		ret.setNombre(nombre);
+		ret.setApellido(apellido);
+		ret.setSexo(sexo);
+		ret.setPasswd(passwrd);
+		return ret;
 	}
+	
 	
 	public void loginUsuario(ArrayList<Cliente> listaClientes, String dni, String passwrd) {
 		for(Cliente cliente : listaClientes) {

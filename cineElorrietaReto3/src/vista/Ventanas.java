@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import bbdd.pojos.Cine;
+import bbdd.pojos.Cliente;
 import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import controlador.GestorBasesDeDatos;
@@ -41,6 +42,8 @@ public class Ventanas {
 	private Date fechaSeleccionada=null;
 	private LocalTime horaSeleccionada=null;
 	private ArrayList<Cine> cines = null;
+	private Cliente cliente = null;
+	private ArrayList<Proyeccion> proyecciones = null;
 
 	
 	public JFrame frame;
@@ -221,8 +224,7 @@ public class Ventanas {
 		JButton btnCancelarSeleccionPelicula = new JButton("Cancelar");
 		btnCancelarSeleccionPelicula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				GestorVentanas ventanas = new GestorVentanas();
-//				mostrarPanelSeleccionCine();
+
 				
 				panelSeleccionPelicula.setVisible(false);
 				panelSeleccionCine.setVisible(true);
@@ -242,7 +244,7 @@ public class Ventanas {
 			new Object[][] {
 			},
 			new String[] {
-				"Titulo", "Duraccion"
+				"Titulo", "Duracion"
 			}
 		));
 
@@ -263,7 +265,11 @@ public class Ventanas {
 				int fila = tableSesiones.getSelectedRow();
 				String hora = (String) tableSesiones.getValueAt(fila, 0);
 				JOptionPane.showMessageDialog(btnAceptarSesion, "Ha seleccionado la película " + peliculaSeleccionada + " a fecha de " +fechaSeleccionada + " a las "+hora, "Confirmación", 1);
-
+				
+				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
+//				gestorbbdd.insertarEntrada(cliente, proyeccion);
+				
+				
 				panelSeleccionSesion.setVisible(false);
 				panelSeleccionCine.setVisible(true);
 			}
@@ -455,14 +461,36 @@ public class Ventanas {
 		JButton btnAceptarRegistro = new JButton("Aceptar");
 		btnAceptarRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				Aquí puedo controlar si ya existe el usuario
-//				Cliente cliente = generarNuevoCliente();
-
-				JOptionPane.showMessageDialog(btnAceptarRegistro, "Usuario creado correctamente", "Confirmación", 1);
-
+				//Creamos usuario
+				GestorUsuarios gestor = new GestorUsuarios();
 				
-				panelRegistro.setVisible(false);
-				panelInicio.setVisible(true);
+				String dni = textFieldDNI.getText();
+				String nombre = textFieldNombre.getText();
+				String apellido = textFieldApellido.getText();
+				String sexo = (String) comboBoxSexo.getSelectedItem();
+				String contrasena = String.valueOf(textFieldPasswd.getPassword());
+				
+				Cliente nuevoCliente = gestor.generarNuevoCliente(dni, nombre, apellido, sexo, contrasena);
+				
+				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
+				if(gestorbbdd.comprobarClienteExiste(nuevoCliente)) {
+					// Comprobamos si el usuario ya existe
+					JOptionPane.showMessageDialog(btnAceptarRegistro, "El usuario ya existe", "Aviso", 1);
+					
+					textFieldDNI.setText("");
+					textFieldNombre.setText("");
+					textFieldApellido.setText("");				
+					textFieldPasswd.setText("");
+					
+				}else {
+					//Metemos al cliente en la BBDD					
+					gestorbbdd.insertarClienteBBDD(nuevoCliente);
+					//Panel de confirmación
+					JOptionPane.showMessageDialog(btnAceptarRegistro, "Usuario creado correctamente", "Confirmación", 1);						
+					
+					panelRegistro.setVisible(false);
+					panelInicio.setVisible(true);
+				}														
 			}
 		});
 		btnAceptarRegistro.setBounds(200, 271, 89, 23);
@@ -516,6 +544,8 @@ public class Ventanas {
 //				gestor.loginUsuario( textFieldUsuarioInicioSesion.getText(), contrasena);
 				
 				JOptionPane.showMessageDialog(btnAceptarRegistro, "Crear joption de desea finalizar la compra??? y el resto de cosas que piden", "Confirmación", 1);
+				
+				
 			}
 		});
 		btnAceptarInicioSesion.setBounds(204, 245, 89, 23);
