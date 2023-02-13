@@ -371,7 +371,7 @@ public class Ventanas {
 		btnCancelarResumen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panelResumenCompra.setVisible(false);
-				panelInicio.setVisible(true);
+				panelSeleccionCine.setVisible(true);
 			}
 		});
 		btnCancelarResumen.setBounds(350, 287, 150, 23);
