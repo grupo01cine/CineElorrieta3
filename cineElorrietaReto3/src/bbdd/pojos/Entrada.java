@@ -2,27 +2,31 @@ package bbdd.pojos;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalTime;
 import java.util.Objects;
 
 /**
- * POJO - Describe la tabla Entrada 
+ * POJO - Describe la tabla Entrada
  */
-public class Entrada implements Serializable{
+public class Entrada implements Serializable {
 
 	private static final long serialVersionUID = 5803034015734968201L;
 
 	// Clave primaria
 	private int codigo = 0;
-	
+
 	// Atributos
-	private Date fechaCompra;
-	private double precio = 0;
-	
-	// Atributos de la Relacion 
-	//Relacion N:1 con la tabla Proyeccion
+	private Date fechaCompra = null;
+	private LocalTime horaCompra = null;
+
+	// Atributos de la Relacion
+	// Relacion N:1 con la tabla Proyeccion
 	private Proyeccion proyeccion = null;
-	//Relacion N:1 con la tabla Cliente
+	// Relacion N:1 con la tabla Cliente
 	private Cliente cliente = null;
+	
+	
+	// Getters y Setters
 	public int getCodigo() {
 		return codigo;
 	}
@@ -35,11 +39,11 @@ public class Entrada implements Serializable{
 	public void setFechaCompra(Date fechaCompra) {
 		this.fechaCompra = fechaCompra;
 	}
-	public double getPrecio() {
-		return precio;
+	public LocalTime getHoraCompra() {
+		return horaCompra;
 	}
-	public void setPrecio(double precio) {
-		this.precio = precio;
+	public void setHoraCompra(LocalTime horaCompra) {
+		this.horaCompra = horaCompra;
 	}
 	public Proyeccion getProyeccion() {
 		return proyeccion;
@@ -56,10 +60,12 @@ public class Entrada implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(cliente, codigo, fechaCompra, precio, proyeccion);
+		return Objects.hash(cliente, codigo, fechaCompra, horaCompra, proyeccion);
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -70,14 +76,17 @@ public class Entrada implements Serializable{
 			return false;
 		Entrada other = (Entrada) obj;
 		return Objects.equals(cliente, other.cliente) && codigo == other.codigo
-				&& Objects.equals(fechaCompra, other.fechaCompra)
-				&& Double.doubleToLongBits(precio) == Double.doubleToLongBits(other.precio)
+				&& Objects.equals(fechaCompra, other.fechaCompra) && Objects.equals(horaCompra, other.horaCompra)
 				&& Objects.equals(proyeccion, other.proyeccion);
 	}
+	
 	@Override
 	public String toString() {
-		return "Entrada [codigo=" + codigo + ", fechaCompra=" + fechaCompra + ", precio=" + precio + ", proyeccion="
-				+ proyeccion + ", cliente=" + cliente + "]";
+		return "Entrada [codigo=" + codigo + ", fechaCompra=" + fechaCompra + ", horaCompra=" + horaCompra
+				+ ", proyeccion=" + proyeccion + ", cliente=" + cliente + "]";
 	}
+	
+	
+	
 	
 }
