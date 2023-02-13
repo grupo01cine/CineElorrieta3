@@ -580,4 +580,76 @@ public class GestorBasesDeDatos {
 		}
 		return false;
 	}
+	
+	public Proyeccion sacarResumen(String titulo, java.util.Date fecha, String hora) {
+		Proyeccion ret = new Proyeccion();
+		String sql = "SELECT pr.* "
+				+ "FROM Proyeccion pr "
+				+ "join Pelicula p on pr.Pelicula_Codigo = p.Codigo "
+				+ "WHERE p.Titulo = '"+ titulo + "' "
+				+ "and pr.Fecha = '"+fecha+"' "
+				+ "and pr.Horario = '"+hora+":00'";
+
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+
+		try {
+			Class.forName(BBDDUtils.DRIVER_REMOTO);
+
+			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO,
+					BBDDUtils.PASS_REMOTO);
+			statement = connection.createStatement();
+
+			resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				if (null == ret)
+					ret = new Proyeccion();
+
+				int codigo = resultSet.getInt("Codigo");
+				Double precio = resultSet.getDouble("Precio");
+				LocalTime horario = resultSet.getTime("Horario").toLocalTime();
+
+				ret.setCodigo(codigo);
+				ret.setFecha(fecha);
+				ret.setHorario(horario);
+				ret.setPrecio(precio);
+
+				Pelicula pelicula = new Pelicula();
+				pelicula.setCodigo(resultSet.getInt("Pelicula_Codigo"));
+				pelicula.setTitulo(titulo);
+				ret.setPelicula(pelicula);
+
+				Sala sala = new Sala();
+				sala.setCodigo(resultSet.getInt("Sala_Codigo"));
+				ret.setSala(sala);
+			}
+		} catch (SQLException sqle) {
+			System.out.println("Error con la BBDD - " + sqle.getMessage());
+		} catch (Exception e) {
+			System.out.println("Error generico - " + e.getMessage());
+		} finally {
+			try {
+				if (resultSet != null)
+					resultSet.close();
+			} catch (Exception e) {
+			}
+			;
+			try {
+				if (statement != null)
+					statement.close();
+			} catch (Exception e) {
+			}
+			;
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (Exception e) {
+			}
+			;
+		}
+
+		return ret;
+	}
 }

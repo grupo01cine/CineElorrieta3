@@ -43,7 +43,7 @@ public class Ventanas {
 	private LocalTime horaSeleccionada=null;
 	private ArrayList<Cine> cines = null;
 	private Cliente cliente = null;
-	private ArrayList<Proyeccion> proyecciones = null;
+	private ArrayList<Proyeccion> proyeccionesSeleccionadas = null;
 
 	
 	public JFrame frame;
@@ -58,6 +58,7 @@ public class Ventanas {
 	private JComboBox<String> comboBoxCines;
 	private JComboBox<Date> comboBoxFechas;
 	private JTable tableSesiones;
+	private JTable tableResumen;
 
 
 
@@ -65,6 +66,7 @@ public class Ventanas {
 	 * Create the application.
 	 */
 	public Ventanas() {
+		proyeccionesSeleccionadas = new ArrayList<Proyeccion>();
 		initialize();
 	}
 
@@ -173,8 +175,22 @@ public class Ventanas {
 		JButton btnFinalizarCompra = new JButton("Finalizar compra");
 		btnFinalizarCompra.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Creamos la tabla resumen
+				tableResumen.removeAll();
+				DefaultTableModel model = (DefaultTableModel) tableResumen.getModel();
+				model.setRowCount(0);
+				for (int i = 0; i < proyeccionesSeleccionadas.size(); i++) {
+					Proyeccion proyeccion = proyeccionesSeleccionadas.get(i);
+					String titulo = proyeccion.getPelicula().getTitulo();
+					String horario = proyeccion.getHorario().toString();
+					int salaPr = proyeccion.getSala().getCodigo();
+					String precio = proyeccion.getPrecio().toString();
+
+					model.addRow(new String[] {  titulo, horario, Integer.toString(salaPr), precio });
+				
 				panelSeleccionCine.setVisible(false);
 				panelResumenCompra.setVisible(true);
+				}
 			}
 		});
 		btnFinalizarCompra.setBounds(401, 25, 188, 23);
@@ -213,7 +229,7 @@ public class Ventanas {
 					Date fecha = proyecciones.get(i).getFecha();
 					comboBoxFechas.addItem(fecha);
 				}
-				
+				tableSesiones.removeAll();
 				panelSeleccionPelicula.setVisible(false);
 				panelSeleccionSesion.setVisible(true);
 			}
@@ -267,8 +283,10 @@ public class Ventanas {
 				JOptionPane.showMessageDialog(btnAceptarSesion, "Ha seleccionado la película " + peliculaSeleccionada + " a fecha de " +fechaSeleccionada + " a las "+hora, "Confirmación", 1);
 				
 				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
-//				gestorbbdd.insertarEntrada(cliente, proyeccion);
+				Proyeccion proyeccion = gestorbbdd.sacarResumen(peliculaSeleccionada, fechaSeleccionada, hora);
 				
+				proyeccionesSeleccionadas.add(proyeccion);
+//				sacarResumen(String titulo, java.util.Date fecha, LocalTime horario)
 				
 				panelSeleccionSesion.setVisible(false);
 				panelSeleccionCine.setVisible(true);
@@ -280,7 +298,7 @@ public class Ventanas {
 		JButton btnSesion = new JButton("Cancelar");
 		btnSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				tableSesiones.removeAll();
 				panelSeleccionSesion.setVisible(false);
 				panelSeleccionPelicula.setVisible(true);
 			}
@@ -314,8 +332,6 @@ public class Ventanas {
 					String precioPr = proyeccion.getPrecio().toString();
 
 					model.addRow(new String[] {  horarioPr, precioPr, Integer.toString(salaPr) });
-				
-				
 				}
 			}
 		});
@@ -346,10 +362,6 @@ public class Ventanas {
 		JLabel lblResumenCompra = new JLabel("Resumen de compra");
 		lblResumenCompra.setBounds(238, 23, 179, 14);
 		panelResumenCompra.add(lblResumenCompra);
-		
-		JTable tableResumen = new JTable();
-		tableResumen.setBounds(10, 43, 596, 154);
-		panelResumenCompra.add(tableResumen);
 		
 		JLabel lblTotal = new JLabel("Total:");
 		lblTotal.setBounds(412, 208, 73, 14);
@@ -400,6 +412,20 @@ public class Ventanas {
 		textFieldPrecioTotal.setBounds(495, 255, 86, 20);
 		panelResumenCompra.add(textFieldPrecioTotal);
 		textFieldPrecioTotal.setColumns(10);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(41, 48, 540, 144);
+		panelResumenCompra.add(scrollPane_2);
+		
+		tableResumen = new JTable();
+		scrollPane_2.setViewportView(tableResumen);
+		tableResumen.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"T\u00EDtulo", "Sesion", "Sala", "Precio"
+			}
+		));
 		
 //		Panel Registro
 		panelRegistro = new JPanel();
@@ -475,7 +501,7 @@ public class Ventanas {
 				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
 				if(gestorbbdd.comprobarClienteExiste(nuevoCliente)) {
 					// Comprobamos si el usuario ya existe
-					JOptionPane.showMessageDialog(btnAceptarRegistro, "El usuario ya existe", "Aviso", 1);
+					JOptionPane.showMessageDialog(btnAceptarRegistro, "El usuario ya existe", "Aviso", 2);
 					
 					textFieldDNI.setText("");
 					textFieldNombre.setText("");
@@ -542,6 +568,9 @@ public class Ventanas {
 				GestorUsuarios gestor = new GestorUsuarios();
 				String contrasena = String.valueOf(textFieldContrasenaInicioSesion.getPassword());
 //				gestor.loginUsuario( textFieldUsuarioInicioSesion.getText(), contrasena);
+				
+				GestorBasesDeDatos gestorbbdd= new GestorBasesDeDatos();
+//				gestorbbdd.insertarEntrada(cliente, proyeccion);
 				
 				JOptionPane.showMessageDialog(btnAceptarRegistro, "Crear joption de desea finalizar la compra??? y el resto de cosas que piden", "Confirmación", 1);
 				
