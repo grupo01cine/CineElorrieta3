@@ -22,7 +22,7 @@ public class Cine implements Serializable {
 
 	// Atributo de la relacion
 	// Relacion 1:N con la tabla Sala (en un cine hay N salas)
-	private ArrayList<Cine> cines = null;
+	private ArrayList<Sala> cines = null;
 
 	public int getCodigo() {
 		return codigo;
@@ -48,11 +48,11 @@ public class Cine implements Serializable {
 		this.direccion = direccion;
 	}
 
-	public ArrayList<Cine> getCines() {
+	public ArrayList<Sala> getSalas() {
 		return cines;
 	}
 
-	public void setCines(ArrayList<Cine> cines) {
+	public void setSalas(ArrayList<Sala> cines) {
 		this.cines = cines;
 	}
 
@@ -80,7 +80,7 @@ public class Cine implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Cine [codigo=" + codigo + ", nombre=" + nombre + ", direccion=" + direccion + ", cines=" + cines + "]";
+		return "Cine [codigo=" + codigo + ", nombre=" + nombre + ", direccion=" + direccion + ", salas=" + cines + "]";
 	}
 
 	

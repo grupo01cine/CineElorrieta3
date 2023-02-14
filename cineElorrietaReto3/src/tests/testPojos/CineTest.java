@@ -1,4 +1,4 @@
-package tests;
+package tests.testPojos;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +17,12 @@ class CineTest {
 		
 		metodos.setNombre("elorrieta");
 		assertEquals(metodos.getNombre(), "elorrieta");
+		
+		metodos.setDireccion("av. lib");
+		assertEquals(metodos.getDireccion(), "av. lib");
+		
+		metodos.setSalas(null);
+		assertEquals(metodos.getSalas(), null);
 	}
 
 	@Test
@@ -24,14 +30,14 @@ class CineTest {
 		Cine cine1 = new Cine();
 		cine1.setCodigo(1);
 		cine1.setNombre("Elorrieta cines");
-		cine1.setDireccion(null);
-		cine1.setTelefono(0);
+		cine1.setDireccion("av. lib");
+		cine1.setSalas(null);
 		
 		Cine cine2 = new Cine();
 		cine2.setCodigo(1);
 		cine2.setNombre("Elorrieta cines");
-		cine2.setDireccion(null);
-		cine2.setTelefono(0);
+		cine2.setDireccion("av. lib");
+		cine2.setSalas(null);
 		
 		assertTrue(cine1.equals(cine2));
 	}
@@ -42,10 +48,9 @@ class CineTest {
 		cineToString.setCodigo(1);
 		cineToString.setNombre("Elorrieta cines");
 		cineToString.setDireccion("Calle abando");
-		cineToString.setTelefono(654626462);
+		cineToString.setSalas(null);
 		
-		assertEquals("Cine [codigo=" + 1 + ", nombre=" + "Elorrieta cines" + ", direccion=" + "Calle abando" + ", telefono=" + 654626462 + "]", cineToString.toString());
-		
+		assertEquals("Cine [codigo=" + 1 + ", nombre=" + "Elorrieta cines" + ", direccion=" + "Calle abando" + ", salas=" + null + "]", cineToString.toString());		
 	}
 
 	@Test

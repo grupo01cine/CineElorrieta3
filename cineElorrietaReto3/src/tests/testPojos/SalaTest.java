@@ -1,4 +1,4 @@
-package tests;
+package tests.testPojos;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +17,12 @@ class SalaTest {
 		
 		sala.setNombre("sala01");
 		assertEquals(sala.getNombre(), "sala01");
+		
+		sala.setCine(null);
+		assertEquals(sala.getCine(), null);
+		
+		sala.setProyecciones(null);
+		assertEquals(sala.getProyecciones(), null);
 	}
 
 	@Test
@@ -24,15 +30,17 @@ class SalaTest {
 		Sala sala1 = new Sala();
 		sala1.setCodigo(7);
 		sala1.setNombre("sala01");
-		sala1.setPelicula(null);
+		sala1.setCine(null);
+		sala1.setProyecciones(null);
 		
 		Sala sala2 = new Sala();
 		sala2.setCodigo(7);
 		sala2.setNombre("sala01");
-		sala2.setPelicula(null);
+		sala2.setCine(null);
+		sala2.setProyecciones(null);
 		
 		// Las fechas no son iguales
-		assertFalse(sala1.equals(sala2));
+		assertTrue(sala1.equals(sala2));
 	}
 	
 	@Test
@@ -40,13 +48,11 @@ class SalaTest {
 		Sala salaToString = new Sala();
 		salaToString.setCodigo(1);
 		salaToString.setNombre("sala01");
-		salaToString.setPelicula(null);
-
+		salaToString.setCine(null);
+		salaToString.setProyecciones(null);
 		
-		String sala = salaToString.toString();
-		
-		assertEquals(sala, salaToString.toString());
-				
+		assertEquals("Sala [codigo=" + 1 + ", nombre=" + "sala01" + ", cine=" + null + ", proyecciones=" + null
+				+ "]", salaToString.toString());
 	}
 
 	@Test
@@ -54,14 +60,14 @@ class SalaTest {
 		Sala sala1 = new Sala();
 		sala1.setCodigo(1);
 		sala1.setNombre("sala01");
-		sala1.setPelicula(null);
+		sala1.setCine(null);
 		
 		Sala sala2 = new Sala();
 		sala2.setCodigo(1);
 		sala2.setNombre("sala01");
-		sala1.setPelicula(null);
+		sala1.setCine(null);
 		
-		assertNotEquals(sala1.hashCode(), sala2.hashCode());
+		assertEquals(sala1.hashCode(), sala2.hashCode());
 	}
 
 }
