@@ -28,6 +28,7 @@ import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import controlador.GestorBasesDeDatos;
 import controlador.GestorUsuarios;
+
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,6 +37,9 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class Ventanas {
+	
+	private GestorUsuarios gestor=null;
+	private GestorBasesDeDatos gestorbbdd=null;
 
 	private String peliculaSeleccionada = null;
 	private String cineSeleccionado = null;
@@ -58,11 +62,16 @@ public class Ventanas {
 	private JComboBox<Date> comboBoxFechas;
 	private JTable tableSesiones;
 	private JTable tableResumen;
+	
+	private JLabel lblSesiones = null;			
 
 	/**
 	 * Create the application.
 	 */
 	public Ventanas() {
+		gestor = new GestorUsuarios();
+		gestorbbdd = new GestorBasesDeDatos();
+
 		initialize();
 	}
 
@@ -135,7 +144,6 @@ public class Ventanas {
 		comboBoxCines = new JComboBox<String>();
 		comboBoxCines.setBounds(265, 102, 246, 22);
 		panelSeleccionCine.add(comboBoxCines);
-		GestorBasesDeDatos gestorbbdd = new GestorBasesDeDatos();
 		cines = gestorbbdd.sacarTodosLosCines();
 		for (int i = 0; i < cines.size(); i++) {
 			String nombre = cines.get(i).getNombre();
@@ -145,7 +153,6 @@ public class Ventanas {
 		JButton btnAceptarSeleccionCine = new JButton("Aceptar");
 		btnAceptarSeleccionCine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GestorBasesDeDatos gestorbbdd = new GestorBasesDeDatos();
 				cineSeleccionado = (String) comboBoxCines.getSelectedItem();
 				ArrayList<Pelicula> peliculas = gestorbbdd.sacarTodasLasPeliculas(cineSeleccionado);
 
@@ -173,6 +180,33 @@ public class Ventanas {
 			public void actionPerformed(ActionEvent e) {
 
 				if (proyeccionesSeleccionadas == null) {
+//					JOptionPane.showMessageDialog(btnFinalizarCompra, "No hay películas seleccionadas. Cerrando sesión...", "Aviso", 2);
+
+//					try {
+//						JOptionPane.showOptionDialog(null ""
+//								+ "No hay películas seleccionadas. Cerrando sesión...",""
+//										+ "Aviso", JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);			
+//						Thread.sleep(2*1000);
+//						JOptionPane.getRootFrame().dispose();
+//					} catch (Exception e1) {
+//			          System.out.println(e1);
+//			        }	
+					
+					  Thread t1 = new Thread(new Runnable() {
+			                public void run() {
+			                    try {
+			                        Thread.sleep(2000);
+			                    } catch (InterruptedException e) {
+			                        e.printStackTrace();
+			                    }               
+			                    JOptionPane.getRootFrame().dispose();
+			                }
+			            });
+			            t1.start();
+			            JOptionPane.showOptionDialog(null, "No hay películas seleccionadas. Cerrando sesión...",""
+								+ "Aviso", JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);
+			            System.exit(0);
+					
 					System.exit(0);
 				} else {
 					// Creamos la tabla resumen
@@ -223,9 +257,8 @@ public class Ventanas {
 		btnAceptarSeleccionPelicula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Sacamos las fechas de la peli seleccionada en el cine seleccionado
-				GestorBasesDeDatos gestorbbdd = new GestorBasesDeDatos();
-				peliculaSeleccionada = (String) tablePeliculas.getValueAt(tablePeliculas.getSelectedRow(),
-						tablePeliculas.getSelectedColumn());
+				int fila = tablePeliculas.getSelectedRow();
+				peliculaSeleccionada = (String) tablePeliculas.getValueAt(fila, 0);
 				ArrayList<Proyeccion> proyecciones = gestorbbdd.sacarTodasLasFechas(cineSeleccionado,
 						peliculaSeleccionada);
 				comboBoxFechas.removeAllItems();
@@ -233,8 +266,10 @@ public class Ventanas {
 					Date fecha = proyecciones.get(i).getFecha();
 					comboBoxFechas.addItem(fecha);
 				}
-				tableSesiones.removeAll();
 				panelSeleccionPelicula.setVisible(false);
+				
+				lblSesiones.setText("Seleccione una sesión para la película '"+ peliculaSeleccionada +"'...");
+				
 				panelSeleccionSesion.setVisible(true);
 			}
 		});
@@ -268,8 +303,9 @@ public class Ventanas {
 		panelSeleccionSesion.setLayout(null);
 		panelSeleccionSesion.setVisible(false);
 
-		JLabel lblSesiones = new JLabel("Seleccione una sesión...");
-		lblSesiones.setBounds(236, 18, 179, 14);
+		lblSesiones = new JLabel();
+		lblSesiones.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSesiones.setBounds(10, 18, 596, 14);
 		panelSeleccionSesion.add(lblSesiones);
 
 		JButton btnAceptarSesion = new JButton("Aceptar");
@@ -278,18 +314,16 @@ public class Ventanas {
 				int fila = tableSesiones.getSelectedRow();
 				String hora = (String) tableSesiones.getValueAt(fila, 0);
 				JOptionPane.showMessageDialog(btnAceptarSesion, "Ha seleccionado la película " + peliculaSeleccionada
-						+ " a fecha de " + fechaSeleccionada + " a las " + hora, "Confirmación", 1);
-
-				GestorBasesDeDatos gestorbbdd = new GestorBasesDeDatos();
+						+ " a fecha de " + fechaSeleccionada + " a las " + hora, "Confirmación", 1);				
 				Proyeccion proyeccion = gestorbbdd.sacarResumen(peliculaSeleccionada, fechaSeleccionada, hora);
 				if (null == proyeccionesSeleccionadas) {
 					proyeccionesSeleccionadas = new ArrayList<Proyeccion>();
 				}
 				proyeccionesSeleccionadas.add(proyeccion);
-//				sacarResumen(String titulo, java.util.Date fecha, LocalTime horario)
 
 				panelSeleccionSesion.setVisible(false);
 				panelSeleccionCine.setVisible(true);
+				
 			}
 		});
 		btnAceptarSesion.setBounds(211, 287, 89, 23);
@@ -317,14 +351,12 @@ public class Ventanas {
 		JButton btnConfirmarFecha = new JButton("Confirmar");
 		btnConfirmarFecha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GestorBasesDeDatos gestorbbdd = new GestorBasesDeDatos();
 				fechaSeleccionada = (Date) comboBoxFechas.getSelectedItem();
 				ArrayList<Proyeccion> proyecciones = gestorbbdd.sacarTodasLasSesiones(cineSeleccionado,
 						peliculaSeleccionada, fechaSeleccionada);
 
 				// Creamos la tabla de sesiones disponibles para el cine y peli elegidas en la
 				// fecha seleccionada
-				tableSesiones.removeAll();
 				DefaultTableModel model = (DefaultTableModel) tableSesiones.getModel();
 				model.setRowCount(0);
 				for (int i = 0; i < proyecciones.size(); i++) {
@@ -479,8 +511,6 @@ public class Ventanas {
 		btnAceptarRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Creamos usuario
-				GestorUsuarios gestor = new GestorUsuarios();
-
 				String dni = textFieldDNI.getText();
 				String nombre = textFieldNombre.getText();
 				String apellido = textFieldApellido.getText();
@@ -489,7 +519,6 @@ public class Ventanas {
 
 				Cliente nuevoCliente = gestor.generarNuevoCliente(dni, nombre, apellido, sexo, contrasena);
 
-				GestorBasesDeDatos gestorbbdd = new GestorBasesDeDatos();
 				if (gestorbbdd.comprobarClienteExiste(nuevoCliente)) {
 					// Comprobamos si el usuario ya existe
 					JOptionPane.showMessageDialog(btnAceptarRegistro, "El usuario ya existe", "Aviso", 2);
@@ -556,11 +585,9 @@ public class Ventanas {
 		JButton btnAceptarInicioSesion = new JButton("Aceptar");
 		btnAceptarInicioSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GestorUsuarios gestor = new GestorUsuarios();
 				String contrasena = String.valueOf(textFieldContrasenaInicioSesion.getPassword());
 //				gestor.loginUsuario( textFieldUsuarioInicioSesion.getText(), contrasena);
 
-				GestorBasesDeDatos gestorbbdd = new GestorBasesDeDatos();
 //				gestorbbdd.insertarEntrada(cliente, proyeccion);
 
 				JOptionPane.showMessageDialog(btnAceptarRegistro,
