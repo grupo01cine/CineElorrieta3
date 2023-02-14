@@ -28,6 +28,7 @@ import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import controlador.GestorBasesDeDatos;
 import controlador.GestorUsuarios;
+import controlador.GestorVentanas;
 
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
@@ -40,6 +41,7 @@ public class Ventanas {
 	
 	private GestorUsuarios gestor=null;
 	private GestorBasesDeDatos gestorbbdd=null;
+	private GestorVentanas gestorventanas=null;
 
 	private String peliculaSeleccionada = null;
 	private String cineSeleccionado = null;
@@ -64,6 +66,9 @@ public class Ventanas {
 	private JTable tableResumen;
 	
 	private JLabel lblSesiones = null;			
+	private JTextField textFieldTotal;
+	private JTextField textFieldDescuento;
+	private JTextField textFieldPrecioFinal;
 
 	/**
 	 * Create the application.
@@ -71,6 +76,7 @@ public class Ventanas {
 	public Ventanas() {
 		gestor = new GestorUsuarios();
 		gestorbbdd = new GestorBasesDeDatos();
+		gestorventanas = new GestorVentanas();
 
 		initialize();
 	}
@@ -180,18 +186,6 @@ public class Ventanas {
 			public void actionPerformed(ActionEvent e) {
 
 				if (proyeccionesSeleccionadas == null) {
-//					JOptionPane.showMessageDialog(btnFinalizarCompra, "No hay películas seleccionadas. Cerrando sesión...", "Aviso", 2);
-
-//					try {
-//						JOptionPane.showOptionDialog(null ""
-//								+ "No hay películas seleccionadas. Cerrando sesión...",""
-//										+ "Aviso", JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);			
-//						Thread.sleep(2*1000);
-//						JOptionPane.getRootFrame().dispose();
-//					} catch (Exception e1) {
-//			          System.out.println(e1);
-//			        }	
-					
 					  Thread t1 = new Thread(new Runnable() {
 			                public void run() {
 			                    try {
@@ -221,6 +215,10 @@ public class Ventanas {
 						String precio = proyeccion.getPrecio().toString();
 
 						model.addRow(new String[] { titulo, horario, Integer.toString(salaPr), precio });
+						
+						//Rellenamos PRECIO
+						Double precioTotal = gestorventanas.sacarPrecioTotal(tableResumen);
+						textFieldTotal.setText(precioTotal.toString());
 
 						panelSeleccionCine.setVisible(false);
 						panelResumenCompra.setVisible(true);
@@ -319,8 +317,8 @@ public class Ventanas {
 				if (null == proyeccionesSeleccionadas) {
 					proyeccionesSeleccionadas = new ArrayList<Proyeccion>();
 				}
-				proyeccionesSeleccionadas.add(proyeccion);
-
+				proyeccionesSeleccionadas.add(proyeccion);				
+				
 				panelSeleccionSesion.setVisible(false);
 				panelSeleccionCine.setVisible(true);
 				
@@ -399,9 +397,9 @@ public class Ventanas {
 		lblDescuento.setBounds(412, 233, 73, 14);
 		panelResumenCompra.add(lblDescuento);
 
-		JLabel lblPrecioTotal = new JLabel("Precio total:");
-		lblPrecioTotal.setBounds(412, 258, 73, 14);
-		panelResumenCompra.add(lblPrecioTotal);
+		JLabel lblPrecioFinal = new JLabel("Precio final:");
+		lblPrecioFinal.setBounds(412, 258, 73, 14);
+		panelResumenCompra.add(lblPrecioFinal);
 
 		JButton btnComprarResumen = new JButton("Finalizar compra");
 		btnComprarResumen.addActionListener(new ActionListener() {
@@ -423,23 +421,23 @@ public class Ventanas {
 		btnCancelarResumen.setBounds(350, 287, 150, 23);
 		panelResumenCompra.add(btnCancelarResumen);
 
-		JTextField textFieldTotal = new JTextField();
+		textFieldTotal = new JTextField();
 		textFieldTotal.setEditable(false);
 		textFieldTotal.setBounds(495, 208, 86, 20);
 		panelResumenCompra.add(textFieldTotal);
 		textFieldTotal.setColumns(10);
 
-		JTextField textFieldDescuento = new JTextField();
+		textFieldDescuento = new JTextField();
 		textFieldDescuento.setEditable(false);
 		textFieldDescuento.setBounds(495, 230, 86, 20);
 		panelResumenCompra.add(textFieldDescuento);
 		textFieldDescuento.setColumns(10);
 
-		JTextField textFieldPrecioTotal = new JTextField();
-		textFieldPrecioTotal.setEditable(false);
-		textFieldPrecioTotal.setBounds(495, 255, 86, 20);
-		panelResumenCompra.add(textFieldPrecioTotal);
-		textFieldPrecioTotal.setColumns(10);
+		textFieldPrecioFinal = new JTextField();
+		textFieldPrecioFinal.setEditable(false);
+		textFieldPrecioFinal.setBounds(495, 255, 86, 20);
+		panelResumenCompra.add(textFieldPrecioFinal);
+		textFieldPrecioFinal.setColumns(10);
 
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(41, 48, 540, 144);
