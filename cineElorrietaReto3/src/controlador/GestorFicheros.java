@@ -35,8 +35,8 @@ public class GestorFicheros {
 	File file = null;
 
 	// Leer 
-	FileReader fileReader = null;
-	BufferedReader bufferedReader = null;
+	//FileReader fileReader = null;
+	//BufferedReader bufferedReader = null;
 
 	// Escribir
 	FileWriter fileWriter = null;
@@ -46,7 +46,7 @@ public class GestorFicheros {
 
 	}
 	
-	private ArrayList<Entrada> PRUEBA_SacarEntradas() {
+	public ArrayList<Entrada> PRUEBA_SacarEntradas() {
 		ArrayList<Entrada> ret = null;
 
 		Connection connection = null;
@@ -62,7 +62,21 @@ public class GestorFicheros {
 
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT * FROM Cine");
-
+			
+			String sql = "SELECT e.Codigo AS CodEntrada, e.Fecha AS FechaEntrada, e.Horario AS HorarioEntrada, "
+					+ "p.Codigo AS CodProyeccion, p.Fecha AS FechaProyeccion, p.Horario AS HorarioProyeccion, p.Precio AS PrecioProyeccion, "
+					+ "s.Codigo AS CodSala, s.Nombre AS NomSala, "
+					+ "c.Codigo AS CodCine, c.Nombre AS NomCine, c.Direccion AS DirCine, "
+					+ "pe.Codigo AS CodPelicula, pe.Coste AS CostePelicula, pe.Duraccion AS DuracionPelicula, pe.Genero AS GeneroPelicula, pe.Titulo AS TituloPelicula,"
+					+ "cl.Codigo AS CodCliente, cl.DNI AS DNICliente, cl.Nombre AS NomCliente, cl.Apellido AS ApellidoCliente, cl.Sexo AS SexoCliente"
+					+ "FROM Entrada AS e "
+					+ "JOIN Proyeccion AS p ON e.ProyeccionCodigo = p.Codigo"
+					+ "JOIN Cliente AS cl ON e.ClienteCodigo = cl.Codigo"
+					+ "JOIN Pelicula AS pe ON p.PeliculaCodigo = pe.Codigo"
+					+ "JOIN Sala AS s ON p.SalaCodigo = s.Codigo"
+					+ "JOIN Cine AS c ON s.CineCodigo = c.Codigo"
+					+ "WHERE CodEntrada = 1";
+			
 			while (resultSet.next()) {
 
 				// Si es necesario, inicializamos la lista
@@ -72,45 +86,44 @@ public class GestorFicheros {
 
 				Entrada entrada = new Entrada();
 				
-				entrada.setCodigo(resultSet.getInt("Codigo"));
-				// TODO Conversion de fechas aqui
-				entrada.setFechaCompra(resultSet.getDate("Fecha")); 
-				entrada.setHoraCompra(resultSet.getTime("Horario"));
+				entrada.setCodigo(resultSet.getInt(1));		
+				entrada.setFechaCompra(resultSet.getDate(2)); // En el POJO guardamos SQL Date por lo que no hace falta comvertirla
+				entrada.setHoraCompra(resultSet.getTime(3).toLocalTime());
 				
 				Proyeccion proyeccion = new Proyeccion();				
-				proyeccion.setCodigo(null);
-				proyeccion.setFecha(null);
-				proyeccion.getHorario(null);
-				proyeccion.setPrecio(null);
+				proyeccion.setCodigo(resultSet.getInt(4));
+				proyeccion.setFecha(resultSet.getDate(5));
+				proyeccion.setHorario(resultSet.getTime(6).toLocalTime());
+				proyeccion.setPrecio(resultSet.getDouble(7));
 				
 				Sala sala = new Sala();				
-				sala.setCodigo(null);
-				sala.setNombre(null);				
+				sala.setCodigo(resultSet.getInt(8));
+				sala.setNombre(resultSet.getString(9));				
 				
 				Cine cine = new Cine();
-				cine.setCodigo(null);
-				cine.setNombre(null);
-				cine.setDireccion(null);
+				cine.setCodigo(resultSet.getInt(10));
+				cine.setNombre(resultSet.getString(11));
+				cine.setDireccion(resultSet.getString(12));
 				
 				sala.setCine(cine);
 								
 				proyeccion.setSala(sala);
-				
+										
 				Pelicula pelicula = new Pelicula();
-				pelicula.setCodigo();
-				pelicula.setCoste();
-				pelicula.setDuracion();
-				pelicula.setGenero();
-				pelicula.setTitulo();			
+				pelicula.setCodigo(resultSet.getInt(13));
+				pelicula.setCoste(resultSet.getDouble(14));
+				pelicula.setDuracion(resultSet.getTime(15).toLocalTime());
+				pelicula.setGenero(resultSet.getString(16));
+				pelicula.setTitulo(resultSet.getString(17));			
 											
 				proyeccion.setPelicula(pelicula);
 				
 				Cliente cliente = new Cliente();
-				cliente.setCodigo();
-				cliente.setDni();
-				cliente.setNombre();
-				cliente.setApellido();
-				cliente.setSexo();
+				cliente.setCodigo(resultSet.getInt(18));
+				cliente.setDni(resultSet.getString(19));
+				cliente.setNombre(resultSet.getString(20));
+				cliente.setApellido(resultSet.getString(21));
+				cliente.setSexo(resultSet.getString(22));
 				
 				entrada.setCliente(cliente);
 				
@@ -147,7 +160,7 @@ public class GestorFicheros {
 		return ret;
 	}
 
-	private void crearNuevoTicket(ArrayList<Entrada> entradaDada) {
+	public void crearNuevoTicket(ArrayList<Entrada> entradaDada) {
 		// Vamos a añadirle la fecha de creacion del Ticket al nombre del Ticket
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
