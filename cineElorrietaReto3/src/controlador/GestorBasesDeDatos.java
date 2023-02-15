@@ -16,19 +16,12 @@ import bbdd.pojos.Cliente;
 import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import bbdd.pojos.Sala;
-import bbdd.pojos.Entrada;
 import bbdd.utils.BBDDUtils;
 
 public class GestorBasesDeDatos {
 
 	private java.sql.Date conversionFecha(java.util.Date fecha) {
 		java.sql.Date ret = new java.sql.Date(fecha.getTime());
-		return ret;
-	}
-
-	private String getJavaTime(java.sql.Time duracion) {
-		String ret = null;
-		ret = duracion.toString();
 		return ret;
 	}
 
@@ -336,7 +329,7 @@ public class GestorBasesDeDatos {
 
 				Proyeccion proyeccion = new Proyeccion();
 
-				int codigo = resultSet.getInt("Codigo");
+//				int codigo = resultSet.getInt("Codigo");
 				java.util.Date fecha = conversionFecha(resultSet.getDate("Fecha"));
 
 //        		SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss");
@@ -420,7 +413,7 @@ public class GestorBasesDeDatos {
 		}
 	}
 
-	public void insertarEntrada(Cliente cliente, Proyeccion proyeccion) {
+	public void insertarEntrada(Cliente cliente, ArrayList<Proyeccion> proyecciones) {
 
 		Connection connection = null;
 		Statement statement = null;
@@ -431,11 +424,22 @@ public class GestorBasesDeDatos {
 					BBDDUtils.PASS_REMOTO);
 			statement = connection.createStatement();
 
-			Date date = new Date();
-
-			String sql = "insert into Entrada (Proyeccion_Codigo, Cliente_Codigo, Fecha_compra) VALUES ('" + date
-					+ "', '" + proyeccion.getCodigo() + "', '" + cliente.getCodigo() + "')";
-			statement.executeUpdate(sql);
+			java.util.Date date = new java.util.Date();
+			java.sql.Date fecha = new java.sql.Date(date.getTime());
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+			String hora = dateFormat.format(date);
+			
+//
+//			String sql = "insert into Entrada (Proyeccion_Codigo, Cliente_Codigo, Fecha_compra) VALUES ('" + date
+//					+ "', '" + proyeccion.getCodigo() + "', '" + cliente.getCodigo() + "')";
+			
+			String sql = null;
+			
+			for(Proyeccion proyec : proyecciones) {				
+				sql = "insert into Entrada (Cliente_Codigo, Proyeccion_Codigo, Fecha_Compra, Hora_Compra) VALUES ('" + cliente.getCodigo()
+				+ "', '" + proyec.getCodigo() + "', '" + fecha + "', '"+hora+ "')";
+				statement.executeUpdate(sql);
+			}
 
 		} catch (SQLException sqle) {
 			System.out.println("Error con la BBDD - " + sqle.getMessage());
@@ -650,6 +654,82 @@ public class GestorBasesDeDatos {
 			;
 		}
 
+		return ret;
+	}
+	
+	public ArrayList<Cliente> sacarTodosLosClientes() {
+		ArrayList<Cliente> ret = null;
+
+		Connection connection = null;
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+
+		try {
+			Class.forName(BBDDUtils.DRIVER_REMOTO);
+
+			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO,
+					BBDDUtils.PASS_REMOTO);
+
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("SELECT * FROM Cliente");
+
+			while (resultSet.next()) {
+
+				if (null == ret) {
+					ret = new ArrayList<Cliente>();
+				}
+
+				Cliente cliente = new Cliente();
+//				int id = resultSet.getInt("Codigo");
+//				String nombre = resultSet.getString("Nombre");
+//				String direccion = resultSet.getString("Direccion");
+				
+				int codigo = resultSet.getInt("Codigo");
+				String dni = resultSet.getString("DNI");
+				String nombre = resultSet.getString("Nombre");
+				String apellido = resultSet.getString("Apellido");
+				String sexo = resultSet.getString("Sexo");
+				String contrasena = resultSet.getString("Contrasena");
+
+				
+				cliente.setCodigo(codigo);
+				cliente.setDni(dni);
+				cliente.setNombre(nombre);
+				cliente.setApellido(apellido);
+				cliente.setSexo(sexo);
+				cliente.setPasswd(contrasena);
+
+				ret.add(cliente);
+
+			}
+		} catch (SQLException sqle) {
+			System.out.println("Error con la BBDD - " + sqle.getMessage());
+		} catch (Exception e) {
+			System.out.println("Error generico - " + e.getMessage());
+		} finally {
+			try {
+				if (resultSet != null)
+					resultSet.close();
+			} catch (Exception e) {
+				// No hace falta
+			}
+			;
+			try {
+				if (statement != null)
+					statement.close();
+			} catch (Exception e) {
+				// No hace falta
+			}
+			;
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (Exception e) {
+				// No hace falta
+			}
+			;
+		}
 		return ret;
 	}
 }
