@@ -200,7 +200,10 @@ public class Ventanas {
 			            System.exit(0);
 				} else {
 					// Creamos la tabla resumen
-					tableResumen.removeAll();
+					gestorventanas.vaciarTabla(tableResumen);
+
+					tableResumen.setModel(
+							new DefaultTableModel(new Object[][] {}, new String[] { "T\u00EDtulo", "Sesion", "Sala", "Precio" }));
 					DefaultTableModel model = (DefaultTableModel) tableResumen.getModel();
 					model.setRowCount(0);
 					for (int i = 0; i < proyeccionesSeleccionadas.size(); i++) {
@@ -231,6 +234,8 @@ public class Ventanas {
 		JButton btnCancelarSeleccionCine = new JButton("Cancelar");
 		btnCancelarSeleccionCine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				cliente = null;
+		    	proyeccionesSeleccionadas.clear();
 				panelSeleccionCine.setVisible(false);
 				panelInicio.setVisible(true);
 			}
@@ -442,9 +447,9 @@ public class Ventanas {
 		panelResumenCompra.add(scrollPane_2);
 
 		tableResumen = new JTable();
+		tableResumen.setEnabled(false);
 		scrollPane_2.setViewportView(tableResumen);
-		tableResumen.setModel(
-				new DefaultTableModel(new Object[][] {}, new String[] { "T\u00EDtulo", "Sesion", "Sala", "Precio" }));
+		
 
 //		Panel Registro
 		panelRegistro = new JPanel();
@@ -605,15 +610,17 @@ public class Ventanas {
 				    	  ArrayList<Entrada> listaEntradas =  fich.sacarEntradas(cliente, proyeccionesSeleccionadas);
 				    	  fich.crearNuevoTicket(listaEntradas);
 				    	  
-				    	  gestorventanas.vaciarTabla(tableResumen);
-
+				    	  cliente = null;
+				    	  proyeccionesSeleccionadas.clear();
 				    	  
 				    	  panelLogin.setVisible(false);
 				          panelInicio.setVisible(true);
 				      }
 				      else{
 //				    	  No compra las entradas
-				    	  gestorventanas.vaciarTabla(tableResumen);
+				    	  cliente = null;
+				    	  proyeccionesSeleccionadas.clear();
+				    	  
 				    	  Thread t1 = new Thread(new Runnable() {
 				                public void run() {
 				                    try {
