@@ -1,6 +1,7 @@
 package controlador;
 
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class GestorVentanas {
 
@@ -65,4 +66,16 @@ public class GestorVentanas {
 		}
 		return ret;
 	}
+	
+	public void vaciarTabla(JTable tabla) {
+		DefaultTableModel diseno = new DefaultTableModel();
+
+		while (diseno.getRowCount() > 0)
+		{
+		diseno.removeRow(0);
+		}
+		
+		tabla.setModel(diseno);
+	}
+	
 }

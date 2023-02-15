@@ -162,7 +162,6 @@ public class Ventanas {
 				ArrayList<Pelicula> peliculas = gestorbbdd.sacarTodasLasPeliculas(cineSeleccionado);
 
 				// Creación de la tabla de películas por cine (en panel PELICULA)
-				tablePeliculas.removeAll();
 				DefaultTableModel model = (DefaultTableModel) tablePeliculas.getModel();
 				model.setRowCount(0);
 				for (int i = 0; i < peliculas.size(); i++) {
@@ -216,13 +215,9 @@ public class Ventanas {
 						//Rellenamos PRECIO
 						Double precioTotal = gestorventanas.sacarPrecioTotal(tableResumen);
 						textFieldTotal.setText(precioTotal.toString());
+						textFieldDescuento.setText(gestorventanas.sacarPorcentaje(tableResumen));
+						textFieldPrecioFinal.setText(gestorventanas.sacarPrecioFinal(tableResumen).toString());
 
-						String precioDescuento = gestorventanas.sacarPorcentaje(tableResumen);
-						textFieldDescuento.setText(precioDescuento);
-						
-						Double precioFinal = gestorventanas.sacarPrecioFinal(tableResumen);
-						textFieldPrecioFinal.setText(precioFinal.toString());
-						
 						panelSeleccionCine.setVisible(false);
 						panelResumenCompra.setVisible(true);
 					}
@@ -267,10 +262,10 @@ public class Ventanas {
 					Date fecha = proyecciones.get(i).getFecha();
 					comboBoxFechas.addItem(fecha);
 				}
+				
+				gestorventanas.vaciarTabla(tableSesiones);
 				panelSeleccionPelicula.setVisible(false);
-				
 				lblSesiones.setText("Seleccione una sesión para la película '"+ peliculaSeleccionada +"'...");
-				
 				panelSeleccionSesion.setVisible(true);
 			}
 		});
@@ -333,7 +328,6 @@ public class Ventanas {
 		JButton btnSesion = new JButton("Cancelar");
 		btnSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tableSesiones.removeAll();
 				panelSeleccionSesion.setVisible(false);
 				panelSeleccionPelicula.setVisible(true);
 			}
@@ -357,7 +351,8 @@ public class Ventanas {
 						peliculaSeleccionada, fechaSeleccionada);
 
 				// Creamos la tabla de sesiones disponibles para el cine y peli elegidas en la
-				// fecha seleccionada
+				// fecha seleccionada				
+				tableSesiones.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Horario", "Precio", "Sala" }));
 				DefaultTableModel model = (DefaultTableModel) tableSesiones.getModel();
 				model.setRowCount(0);
 				for (int i = 0; i < proyecciones.size(); i++) {
@@ -379,7 +374,7 @@ public class Ventanas {
 
 		tableSesiones = new JTable();
 		scrollPane.setViewportView(tableSesiones);
-		tableSesiones.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Horario", "Precio", "Sala" }));
+		
 
 //		Panel Resumen Compra
 		panelResumenCompra = new JPanel();
@@ -610,11 +605,15 @@ public class Ventanas {
 				    	  ArrayList<Entrada> listaEntradas =  fich.sacarEntradas(cliente, proyeccionesSeleccionadas);
 				    	  fich.crearNuevoTicket(listaEntradas);
 				    	  
+				    	  gestorventanas.vaciarTabla(tableResumen);
+
+				    	  
 				    	  panelLogin.setVisible(false);
 				          panelInicio.setVisible(true);
 				      }
 				      else{
 //				    	  No compra las entradas
+				    	  gestorventanas.vaciarTabla(tableResumen);
 				    	  Thread t1 = new Thread(new Runnable() {
 				                public void run() {
 				                    try {
@@ -649,6 +648,16 @@ public class Ventanas {
 		});
 		btnCancelarInicioSesion.setBounds(346, 245, 89, 23);
 		panelLogin.add(btnCancelarInicioSesion);
+		
+		JButton btnRegistroLogin = new JButton("Registro");
+		btnRegistroLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelLogin.setVisible(false);
+				panelRegistro.setVisible(true);
+			}
+		});
+		btnRegistroLogin.setBounds(442, 10, 154, 37);
+		panelLogin.add(btnRegistroLogin);
 
 	}
 }
