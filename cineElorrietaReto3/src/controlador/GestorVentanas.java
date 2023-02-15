@@ -12,17 +12,58 @@ public class GestorVentanas {
 			Double precio = Double.parseDouble(String.valueOf(tablaResumen.getValueAt(i,3)));
              ret = ret + precio;
         }
-		
-		System.out.println(ret);
 		return ret;
 	}
 	
-	public int sacarDescuento (JTable tablaResumen) {
-		int ret=0;
+	public Double sacarDescuento (JTable tablaResumen) {
+		Double ret=(double)0;
 		int filas=tablaResumen.getRowCount();
+		Double precio=sacarPrecioTotal(tablaResumen);
 		
+		if (filas==2) {
+		ret = (20*precio)/100;
+		}
+		else if (filas==3) {
+		ret = (30*precio)/100;
+		}
+		else if (filas==4) {
+		ret = (40*precio)/100;
+		}
+		else if (filas>=5) {
+		ret = (50*precio)/100;
+		}
+		return ret;
+		}
+
+	
+	public Double sacarPrecioFinal(JTable tablaResumen) {
+		Double ret=(double)0;
+		Double precio = sacarPrecioTotal(tablaResumen);
+		Double descuento = sacarDescuento(tablaResumen);
+		ret = precio-descuento;
+		return ret;
+		}
 		
+	public String sacarPorcentaje(JTable tablaResumen) {
+		String ret = "";
+		int filas=tablaResumen.getRowCount();
+		Double precio=sacarPrecioTotal(tablaResumen);
 		
+		if (filas<2) {
+		ret ="0%";
+		}
+		else if (filas==2) {
+		ret = "20%";
+		}
+		else if (filas==3) {
+		ret = "30%";
+		}
+		else if (filas==4) {
+		ret = "40%";
+		}
+		else if (filas>=5) {
+		ret = "50%";
+		}
 		return ret;
 	}
 }

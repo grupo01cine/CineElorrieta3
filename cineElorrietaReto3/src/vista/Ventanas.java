@@ -220,6 +220,12 @@ public class Ventanas {
 						Double precioTotal = gestorventanas.sacarPrecioTotal(tableResumen);
 						textFieldTotal.setText(precioTotal.toString());
 
+						String precioDescuento = gestorventanas.sacarPorcentaje(tableResumen);
+						textFieldDescuento.setText(precioDescuento);
+						
+						Double precioFinal = gestorventanas.sacarPrecioFinal(tableResumen);
+						textFieldPrecioFinal.setText(precioFinal.toString());
+						
 						panelSeleccionCine.setVisible(false);
 						panelResumenCompra.setVisible(true);
 					}
