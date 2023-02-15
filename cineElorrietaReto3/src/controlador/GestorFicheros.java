@@ -1,8 +1,6 @@
 package controlador;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,10 +12,6 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
-
-import javax.swing.filechooser.FileSystemView;
-
 import bbdd.pojos.Cine;
 import bbdd.pojos.Cliente;
 import bbdd.pojos.Entrada;
@@ -48,7 +42,7 @@ public class GestorFicheros {
 
 	}
 
-	public ArrayList<Entrada> PRUEBA_SacarEntradas() {
+	public ArrayList<Entrada> sacarEntradas(Cliente clienteDado, ArrayList<Proyeccion> proyeccionesSeleccionadas) {
 		// TODO Cambiar codEntrada
 		ArrayList<Entrada> ret = null;
 
@@ -56,6 +50,10 @@ public class GestorFicheros {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
+
+		java.util.Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String fecha = dateFormat.format(date);
 
 		try {
 			Class.forName(BBDDUtils.DRIVER_REMOTO);
@@ -76,7 +74,8 @@ public class GestorFicheros {
 					+ " JOIN Cliente AS cl ON e.Cliente_Codigo = cl.Codigo"
 					+ " JOIN Pelicula AS pe ON p.Pelicula_Codigo = pe.Codigo"
 					+ " JOIN Sala AS s ON p.Sala_Codigo = s.Codigo" + " JOIN Cine AS c ON s.Cine_Codigo = c.Codigo"
-					+ " WHERE" + " e.Codigo = 1";
+					+ " WHERE" + " cl.Codigo =  '" + clienteDado.getCodigo() + "'" + " AND e.Fecha_Compra = '" + fecha
+					+ "'";
 
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
@@ -179,15 +178,17 @@ public class GestorFicheros {
 
 		File fich = new File(RUTA_CARPETA + "Entradas_Cine_" + fech + ".txt");
 
+		int acum = 1;
+
 		try {
 			fileWriter = new FileWriter(fich);
 			printWriter = new PrintWriter(fileWriter);
 
 			for (Entrada entrada : entradaDada) {
-				printWriter.println("Entrada " + entrada.getCodigo());
+				printWriter.println("Entrada " + acum);
 				printWriter.println(" Datos Cine");
 				printWriter.println("	- Cine: " + entrada.getProyeccion().getSala().getCine().getNombre());
-				printWriter.println("   - Direccion: " + entrada.getProyeccion().getSala().getCine().getDireccion());
+				printWriter.println("	- Direccion: " + entrada.getProyeccion().getSala().getCine().getDireccion());
 				printWriter.println("	- Pelicula: " + entrada.getProyeccion().getPelicula().getTitulo());
 				printWriter.println("	  > Duraccion: " + entrada.getProyeccion().getPelicula().getDuracion());
 				printWriter.println("	  > Gemero: " + entrada.getProyeccion().getPelicula().getGenero());
@@ -201,7 +202,12 @@ public class GestorFicheros {
 				printWriter.println(" Fecha compra: " + entrada.getFechaCompra());
 				printWriter.println(" Hora compra: " + entrada.getHoraCompra());
 				printWriter.println("");
+
+				acum++;
 			}
+
+			printWriter.println("Descuento: " + sacarDescuento(entradaDada));
+			printWriter.println("Precio Final: ");
 
 		} catch (IOException e) {
 			System.out.println("IOException - Error de escritura en el fichero " + RUTA_CARPETA);
@@ -214,5 +220,26 @@ public class GestorFicheros {
 				// Nada
 			}
 		}
+	}
+
+	private String sacarDescuento(ArrayList<Entrada> entradaDada) {
+		String ret = "";
+		switch (entradaDada.size()) {
+		case 0:
+			ret = "0%";			
+			break;
+		case 1:
+			ret = "10%";			
+			break;
+		case 2:
+			ret = "20%";
+			break;
+		default:
+			ret="50%";
+			break;
+		}
+		
+		return ret;
+
 	}
 }

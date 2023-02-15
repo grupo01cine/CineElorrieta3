@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -12,7 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -24,9 +22,11 @@ import javax.swing.table.DefaultTableModel;
 
 import bbdd.pojos.Cine;
 import bbdd.pojos.Cliente;
+import bbdd.pojos.Entrada;
 import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import controlador.GestorBasesDeDatos;
+import controlador.GestorFicheros;
 import controlador.GestorUsuarios;
 import controlador.GestorVentanas;
 
@@ -35,7 +35,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
-import java.awt.Color;
 
 public class Ventanas {
 	
@@ -46,7 +45,7 @@ public class Ventanas {
 	private String peliculaSeleccionada = null;
 	private String cineSeleccionado = null;
 	private Date fechaSeleccionada = null;
-	private LocalTime horaSeleccionada = null;
+	//private LocalTime horaSeleccionada = null;
 	private ArrayList<Cine> cines = null;
 	private Cliente cliente = null;
 	private ArrayList<Proyeccion> proyeccionesSeleccionadas = null;
@@ -594,11 +593,19 @@ public class Ventanas {
 				    	  for(int i=0; i<todosLosClientes.size(); i++) {
 				    		  if(dni.equalsIgnoreCase(todosLosClientes.get(i).getDni())) {
 				    			  cliente = todosLosClientes.get(i);
+				    			  
+				    			  
 				    		  }
-				    	  }
-
+				    	  }				    	  				    	  
 				    	  gestorbbdd.insertarEntrada(cliente, proyeccionesSeleccionadas);
+				    	  JOptionPane.showMessageDialog(null, "Compra realizada. ¡Muchas gracias!", "Confirmación", 1);
 				    	  
+				    	  GestorFicheros fich = new GestorFicheros();
+				    	  ArrayList<Entrada> listaEntradas =  fich.sacarEntradas(cliente, proyeccionesSeleccionadas);
+				    	  fich.crearNuevoTicket(listaEntradas);
+				    	  
+				    	  panelLogin.setVisible(false);
+				          panelInicio.setVisible(true);
 				      }
 				      else{
 //				    	  No compra las entradas

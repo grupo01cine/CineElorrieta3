@@ -16,19 +16,12 @@ import bbdd.pojos.Cliente;
 import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import bbdd.pojos.Sala;
-import bbdd.pojos.Entrada;
 import bbdd.utils.BBDDUtils;
 
 public class GestorBasesDeDatos {
 
 	private java.sql.Date conversionFecha(java.util.Date fecha) {
 		java.sql.Date ret = new java.sql.Date(fecha.getTime());
-		return ret;
-	}
-
-	private String getJavaTime(java.sql.Time duracion) {
-		String ret = null;
-		ret = duracion.toString();
 		return ret;
 	}
 
@@ -336,7 +329,7 @@ public class GestorBasesDeDatos {
 
 				Proyeccion proyeccion = new Proyeccion();
 
-				int codigo = resultSet.getInt("Codigo");
+//				int codigo = resultSet.getInt("Codigo");
 				java.util.Date fecha = conversionFecha(resultSet.getDate("Fecha"));
 
 //        		SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss");
@@ -442,13 +435,11 @@ public class GestorBasesDeDatos {
 			
 			String sql = null;
 			
-			for(int i = 0; i<proyecciones.size(); i++) {
-				Proyeccion proyeccion = proyecciones.get(i);
+			for(Proyeccion proyec : proyecciones) {				
 				sql = "insert into Entrada (Cliente_Codigo, Proyeccion_Codigo, Fecha_Compra, Hora_Compra) VALUES ('" + cliente.getCodigo()
-					+ "', '" + proyeccion.getCodigo() + "', '" + fecha + "', '"+hora+ "')";
+				+ "', '" + proyec.getCodigo() + "', '" + fecha + "', '"+hora+ "')";
+				statement.executeUpdate(sql);
 			}
-			
-			statement.executeUpdate(sql);
 
 		} catch (SQLException sqle) {
 			System.out.println("Error con la BBDD - " + sqle.getMessage());
