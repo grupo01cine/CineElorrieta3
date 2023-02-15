@@ -47,7 +47,6 @@ public class GestorVentanas {
 	public String sacarPorcentaje(JTable tablaResumen) {
 		String ret = "";
 		int filas=tablaResumen.getRowCount();
-		Double precio=sacarPrecioTotal(tablaResumen);
 		
 		if (filas<2) {
 		ret ="0%";
