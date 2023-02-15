@@ -12,10 +12,6 @@ public class GestorVentanas {
 			Double precio = Double.parseDouble(String.valueOf(tablaResumen.getValueAt(i,3)));
              ret = ret + precio;
         }
-<<<<<<< HEAD
-=======
-		
->>>>>>> branch 'master' of https://github.com/grupo01cine/CineElorrieta3.git
 		return ret;
 	}
 	
