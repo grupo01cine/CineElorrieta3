@@ -13,7 +13,6 @@ public class GestorVentanas {
              ret = ret + precio;
         }
 		
-		System.out.println(ret);
 		return ret;
 	}
 	
