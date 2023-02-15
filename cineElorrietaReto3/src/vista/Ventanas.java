@@ -200,8 +200,6 @@ public class Ventanas {
 			            JOptionPane.showOptionDialog(null, "No hay películas seleccionadas. Cerrando sesión...",""
 								+ "Aviso", JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);
 			            System.exit(0);
-					
-					System.exit(0);
 				} else {
 					// Creamos la tabla resumen
 					tableResumen.removeAll();
@@ -583,15 +581,47 @@ public class Ventanas {
 		JButton btnAceptarInicioSesion = new JButton("Aceptar");
 		btnAceptarInicioSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String dni = textFieldUsuarioInicioSesion.getText();
 				String contrasena = String.valueOf(textFieldContrasenaInicioSesion.getPassword());
-//				gestor.loginUsuario( textFieldUsuarioInicioSesion.getText(), contrasena);
+				
+				if(gestor.loginUsuario(dni, contrasena)==true) {
+					int resp=JOptionPane.showConfirmDialog(btnAceptarInicioSesion,"¿Desea comprar las entradas?",  "Finalizar Compra", JOptionPane.YES_NO_OPTION, 1);
+				      if (JOptionPane.OK_OPTION == resp){
+//				    	  Sí compra las entradas; generamos entradas
+				    	  ArrayList<Cliente> todosLosClientes = new ArrayList<Cliente>();
+				    	  todosLosClientes = gestorbbdd.sacarTodosLosClientes();
+				    	  
+				    	  for(int i=0; i<todosLosClientes.size(); i++) {
+				    		  if(dni.equalsIgnoreCase(todosLosClientes.get(i).getDni())) {
+				    			  cliente = todosLosClientes.get(i);
+				    		  }
+				    	  }
 
-//				gestorbbdd.insertarEntrada(cliente, proyeccion);
-
-				JOptionPane.showMessageDialog(btnAceptarRegistro,
-						"Crear joption de desea finalizar la compra??? y el resto de cosas que piden", "Confirmación",
-						1);
-
+				    	  gestorbbdd.insertarEntrada(cliente, proyeccionesSeleccionadas);
+				    	  
+				      }
+				      else{
+//				    	  No compra las entradas
+				    	  Thread t1 = new Thread(new Runnable() {
+				                public void run() {
+				                    try {
+				                        Thread.sleep(2000);
+				                    } catch (InterruptedException e) {
+				                        e.printStackTrace();
+				                    }               
+				                    JOptionPane.getRootFrame().dispose();
+				                }
+				            });
+				            t1.start();
+				            JOptionPane.showOptionDialog(null, "Cerrando sesión...",""
+									+ "Aviso", JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);
+				            
+				            panelLogin.setVisible(false);
+				            panelInicio.setVisible(true);
+				   }
+				}else {
+					JOptionPane.showMessageDialog(btnAceptarRegistro, "Usuario o contraseña incorrectos", "Error", 0);
+				}
 			}
 		});
 		btnAceptarInicioSesion.setBounds(204, 245, 89, 23);
@@ -600,7 +630,6 @@ public class Ventanas {
 		JButton btnCancelarInicioSesion = new JButton("Cancelar");
 		btnCancelarInicioSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				panelLogin.setVisible(false);
 				panelInicio.setVisible(true);
 			}
