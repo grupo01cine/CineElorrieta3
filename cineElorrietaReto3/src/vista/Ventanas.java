@@ -45,7 +45,6 @@ public class Ventanas {
 	private String peliculaSeleccionada = null;
 	private String cineSeleccionado = null;
 	private Date fechaSeleccionada = null;
-	//private LocalTime horaSeleccionada = null;
 	private ArrayList<Cine> cines = null;
 	private Cliente cliente = null;
 	private ArrayList<Proyeccion> proyeccionesSeleccionadas = null;
@@ -195,7 +194,7 @@ public class Ventanas {
 			                }
 			            });
 			            t1.start();
-			            JOptionPane.showOptionDialog(null, "No hay películas seleccionadas. Cerrando sesión...",""
+			            JOptionPane.showOptionDialog(null, "No hay películas seleccionadas. Cerrando aplicación...",""
 								+ "Aviso", JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);
 			            System.exit(0);
 				} else {
@@ -235,7 +234,7 @@ public class Ventanas {
 		btnCancelarSeleccionCine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cliente = null;
-		    	proyeccionesSeleccionadas.clear();
+		    	proyeccionesSeleccionadas = null;
 				panelSeleccionCine.setVisible(false);
 				panelInicio.setVisible(true);
 			}
@@ -592,26 +591,31 @@ public class Ventanas {
 				if(gestor.loginUsuario(dni, contrasena)==true) {
 					int resp=JOptionPane.showConfirmDialog(btnAceptarInicioSesion,"¿Desea comprar las entradas?",  "Finalizar Compra", JOptionPane.YES_NO_OPTION, 1);
 				      if (JOptionPane.OK_OPTION == resp){
-//				    	  Sí compra las entradas; generamos entradas
+//				    	  Sí compra las entradas
 				    	  ArrayList<Cliente> todosLosClientes = new ArrayList<Cliente>();
 				    	  todosLosClientes = gestorbbdd.sacarTodosLosClientes();
 				    	  
 				    	  for(int i=0; i<todosLosClientes.size(); i++) {
 				    		  if(dni.equalsIgnoreCase(todosLosClientes.get(i).getDni())) {
-				    			  cliente = todosLosClientes.get(i);
-				    			  
-				    			  
+				    			  cliente = todosLosClientes.get(i);  
 				    		  }
 				    	  }				    	  				    	  
 				    	  gestorbbdd.insertarEntrada(cliente, proyeccionesSeleccionadas);
+				    	  
+//				    	  Preguntamos si quiere factura
+				    	  int fac =JOptionPane.showConfirmDialog(null,"¿Desea recibir la factura?",  "Finalizar Compra", JOptionPane.YES_NO_OPTION, 1);
+					      if (JOptionPane.OK_OPTION == fac){
+					    	  GestorFicheros fich = new GestorFicheros();
+					    	  ArrayList<Entrada> listaEntradas =  fich.sacarEntradas(cliente, proyeccionesSeleccionadas);
+					    	  fich.crearNuevoTicket(listaEntradas);
+					    	  
+					    	  JOptionPane.showMessageDialog(null, "Factura generada correctamente", "Confirmación", 1);
+					      }
+				    	  
 				    	  JOptionPane.showMessageDialog(null, "Compra realizada. ¡Muchas gracias!", "Confirmación", 1);
-				    	  
-				    	  GestorFicheros fich = new GestorFicheros();
-				    	  ArrayList<Entrada> listaEntradas =  fich.sacarEntradas(cliente, proyeccionesSeleccionadas);
-				    	  fich.crearNuevoTicket(listaEntradas);
-				    	  
+
 				    	  cliente = null;
-				    	  proyeccionesSeleccionadas.clear();
+				    	  proyeccionesSeleccionadas = null;
 				    	  
 				    	  panelLogin.setVisible(false);
 				          panelInicio.setVisible(true);
@@ -619,7 +623,7 @@ public class Ventanas {
 				      else{
 //				    	  No compra las entradas
 				    	  cliente = null;
-				    	  proyeccionesSeleccionadas.clear();
+				    	  proyeccionesSeleccionadas = null;
 				    	  
 				    	  Thread t1 = new Thread(new Runnable() {
 				                public void run() {
@@ -640,6 +644,8 @@ public class Ventanas {
 				   }
 				}else {
 					JOptionPane.showMessageDialog(btnAceptarRegistro, "Usuario o contraseña incorrectos", "Error", 0);
+					textFieldUsuarioInicioSesion.setText("");
+					textFieldContrasenaInicioSesion.setText("");
 				}
 			}
 		});
@@ -665,6 +671,5 @@ public class Ventanas {
 		});
 		btnRegistroLogin.setBounds(442, 10, 154, 37);
 		panelLogin.add(btnRegistroLogin);
-
 	}
 }
