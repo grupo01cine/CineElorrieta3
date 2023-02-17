@@ -207,7 +207,7 @@ public class GestorFicheros {
 			}
 
 			printWriter.println("Descuento: " + sacarDescuento(entradaDada));
-			printWriter.println("Precio Final: ");
+			printWriter.println("Precio Final: " + sacarPrecioFinal(entradaDada) + "€");
 
 		} catch (IOException e) {
 			System.out.println("IOException - Error de escritura en el fichero " + RUTA_CARPETA);
@@ -226,13 +226,19 @@ public class GestorFicheros {
 		String ret = "";
 		switch (entradaDada.size()) {
 		case 0:
-			ret = "0%";			
+			ret = "Sin descuento";			
 			break;
 		case 1:
-			ret = "10%";			
+			ret = "Sin descuento";			
 			break;
 		case 2:
 			ret = "20%";
+			break;
+		case 3:
+			ret = "30%";
+			break;
+		case 4:
+			ret = "40%";
 			break;
 		default:
 			ret="50%";
@@ -240,6 +246,14 @@ public class GestorFicheros {
 		}
 		
 		return ret;
-
+	}
+	
+	private double sacarPrecioFinal(ArrayList<Entrada> entradaDada) {
+		double sumaPrecios = 0;
+		for(Entrada entrada : entradaDada) {
+			sumaPrecios += entrada.getProyeccion().getPrecio();
+		}
+		
+		return sumaPrecios;
 	}
 }
