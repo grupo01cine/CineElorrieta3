@@ -45,9 +45,7 @@ class Sprint2Tests {
 		if (null == listaPeliculas) {
 			fail("El metodo no devuelve ninguna pelicula");
 		} else {
-			if (!listaPeliculas.get(0).getTitulo().equals("Handia")) {
-				fail("Las peliculas no estan ordenadas");
-			}
+			assertEquals("Handia", listaPeliculas.get(0).getTitulo());
 		}
 	}
 
