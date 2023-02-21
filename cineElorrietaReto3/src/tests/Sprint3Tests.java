@@ -2,8 +2,11 @@ package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -53,7 +56,7 @@ class Sprint3Tests {
 		// Creacion de Proyeccion2
 		Proyeccion proyeccion2 = new Proyeccion();
 		proyeccion2.setCodigo(1);
-		proyeccion2.setHorario(time);		
+		proyeccion2.setHorario(time);
 		proyeccion2.setPrecio(6.5);
 
 		Pelicula pelicula2 = new Pelicula();
@@ -75,7 +78,7 @@ class Sprint3Tests {
 			model.addRow(new String[] { proyec.getPelicula().getTitulo(), proyec.getHorario().toString(),
 					Integer.toString(proyec.getSala().getCodigo()), proyec.getPrecio().toString() });
 		}
-		
+
 		assertEquals("20%", metodosVentanas.sacarPorcentaje(tablaDescuento));
 	}
 
@@ -97,7 +100,44 @@ class Sprint3Tests {
 	// ** TESTS COMPRA + FACTURA **
 	@Test
 	void testGuardadoCorrecto() {
-		fail("Not yet implemented");
+		Cliente cliente = new Cliente();
+		cliente.setCodigo(13);
+		cliente.setDni("87654321B");
+		cliente.setNombre("Pepe");
+		cliente.setApellido("Marton");
+		cliente.setSexo("Hombre");
+		cliente.setPasswd("admin");
+		cliente.setEntradas(null);
+		
+		String fechaDada = "2023-03-01";  
+	    Date fecha = null;
+		try {
+			fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fechaDada);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	    String horaDada = "18:00";
+	    LocalTime hora = LocalTime.parse(horaDada);
+		
+		ArrayList<Proyeccion> proyeccionesSeleccionadas = new ArrayList<Proyeccion>();
+		Proyeccion proyec = new Proyeccion();
+		proyec.setFecha(fecha);
+		proyec.setHorario(hora);
+		Pelicula pelicula = new Pelicula();
+		pelicula.setCodigo(1);
+		proyec.setPelicula(pelicula);
+		proyec.setPrecio(5.5);
+		Sala sala = new Sala();
+		sala.setCodigo(1);
+		proyec.setSala(sala);
+		
+		proyeccionesSeleccionadas.add(proyec);
+		
+		metodosBaseDatos.insertarEntrada(cliente, proyeccionesSeleccionadas);
+		
+		assertTrue(metodosBaseDatos.comprobarEntrada(cliente, proyeccionesSeleccionadas));
 	}
 
 	@Test

@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
-
 import bbdd.pojos.Cine;
 import bbdd.pojos.Cliente;
 import bbdd.pojos.Pelicula;
@@ -429,10 +428,6 @@ public class GestorBasesDeDatos {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 			String hora = dateFormat.format(date);
 			
-//
-//			String sql = "insert into Entrada (Proyeccion_Codigo, Cliente_Codigo, Fecha_compra) VALUES ('" + date
-//					+ "', '" + proyeccion.getCodigo() + "', '" + cliente.getCodigo() + "')";
-			
 			String sql = null;
 			
 			for(Proyeccion proyec : proyecciones) {				
@@ -731,5 +726,55 @@ public class GestorBasesDeDatos {
 			;
 		}
 		return ret;
+	}
+
+	public boolean comprobarEntrada(Cliente cliente, ArrayList<Proyeccion> proyeccionesSeleccionadas) {
+		String sql = "SELECT *" + "FROM Proyeccion pr " + "join Sala s on pr.Sala_Codigo=s.Codigo "
+				+ "join Entrada e on e.Proyeccion_Codigo = pr.Codigo "
+				+ "join Cliente c on e.Cliente_Codigo = c.Codigo" 
+				+ "WHERE c.DNI = '" + cliente.getDni() + "'"
+				+ "AND pr.Codigo = '" + proyeccionesSeleccionadas.get(0).getCodigo() + "'";
+
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+
+		try {
+			Class.forName(BBDDUtils.DRIVER_REMOTO);
+
+			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO,
+					BBDDUtils.PASS_REMOTO);
+			statement = connection.createStatement();
+
+			resultSet = statement.executeQuery(sql);
+
+			if (resultSet.next()) {
+				return true;
+			}
+		} catch (SQLException sqle) {
+			System.out.println("Error con la BBDD - " + sqle.getMessage());
+		} catch (Exception e) {
+			System.out.println("Error generico - " + e.getMessage());
+		} finally {
+			try {
+				if (resultSet != null)
+					resultSet.close();
+			} catch (Exception e) {
+			}
+			;
+			try {
+				if (statement != null)
+					statement.close();
+			} catch (Exception e) {
+			}
+			;
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (Exception e) {
+			}
+			;
+		}
+		return false;
 	}
 }
