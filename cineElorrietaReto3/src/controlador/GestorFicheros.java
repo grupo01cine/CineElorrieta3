@@ -4,21 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import bbdd.pojos.Cine;
-import bbdd.pojos.Cliente;
 import bbdd.pojos.Entrada;
-import bbdd.pojos.Pelicula;
-import bbdd.pojos.Proyeccion;
-import bbdd.pojos.Sala;
-import bbdd.utils.BBDDUtils;
 
 public class GestorFicheros {
 
