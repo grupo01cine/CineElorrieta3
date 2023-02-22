@@ -131,7 +131,7 @@ public class Ventanas {
 
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(Ventanas.class.getResource("/img/logo.png")));
-		lblNewLabel.setBounds(45, 61, 305, 279);
+		lblNewLabel.setBounds(44, 33, 305, 279);
 		panelInicio.add(lblNewLabel);
 
 //		panel Seleccion Cine

@@ -534,8 +534,7 @@ public class GestorBasesDeDatos {
 
 		String sql = "SELECT * " 
 		+ "FROM Cliente as c " 
-		+ "WHERE c.Nombre = '" + nuevoCliente.getNombre()
-		+ "' and c.DNI = '" + nuevoCliente.getDni() + "' and c.Apellido = '" + nuevoCliente.getApellido() + "'";
+		+ "WHERE c.DNI = '" + nuevoCliente.getDni() + "'";
 
 		Connection connection = null;
 		Statement statement = null;
