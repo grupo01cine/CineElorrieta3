@@ -606,7 +606,7 @@ public class Ventanas {
 				    	  int fac =JOptionPane.showConfirmDialog(null,"¿Desea recibir la factura?",  "Finalizar Compra", JOptionPane.YES_NO_OPTION, 1);
 					      if (JOptionPane.OK_OPTION == fac){
 					    	  GestorFicheros fich = new GestorFicheros();
-					    	  ArrayList<Entrada> listaEntradas =  fich.sacarEntradas(cliente, proyeccionesSeleccionadas);
+					    	  ArrayList<Entrada> listaEntradas =  gestorbbdd.sacarEntradas(cliente, proyeccionesSeleccionadas);
 					    	  fich.crearNuevoTicket(listaEntradas);
 					    	  
 					    	  JOptionPane.showMessageDialog(null, "Factura generada correctamente", "Confirmación", 1);

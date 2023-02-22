@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import bbdd.pojos.Cine;
 import bbdd.pojos.Cliente;
+import bbdd.pojos.Entrada;
 import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import bbdd.pojos.Sala;
@@ -775,5 +776,128 @@ public class GestorBasesDeDatos {
 			;
 		}
 		return false;
+	}
+	
+	public ArrayList<Entrada> sacarEntradas(Cliente clienteDado, ArrayList<Proyeccion> proyeccionesSeleccionadas) {
+		// TODO Cambiar codEntrada
+		ArrayList<Entrada> ret = null;
+
+		Connection connection = null;
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+
+		java.util.Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String fecha = dateFormat.format(date);
+
+		try {
+			Class.forName(BBDDUtils.DRIVER_REMOTO);
+
+			connection = DriverManager.getConnection(BBDDUtils.URL_REMOTO, BBDDUtils.USER_REMOTO,
+					BBDDUtils.PASS_REMOTO);
+
+			String sql = "SELECT" + " e.Codigo AS CodEntrada," + " e.Fecha_Compra AS FechaEntrada,"
+					+ " e.Hora_Compra AS HoraEntrada," + " p.Codigo AS CodProyeccion," + " p.Fecha AS FechaProyeccion,"
+					+ " p.Horario AS HorarioProyeccion," + " p.Precio AS PrecioProyeccion," + " s.Codigo AS CodSala,"
+					+ " s.Numero_Sala AS NomSala," + " c.Codigo AS CodCine," + " c.Nombre AS NomCine,"
+					+ " c.Direccion AS DirCine," + " pe.Codigo AS CodPelicula,"
+					+ " pe.CosteProduccion AS CostePelicula," + " pe.Duracion AS DuracionPelicula,"
+					+ " pe.Genero AS GeneroPelicula," + " pe.Titulo AS TituloPelicula," + " cl.Codigo AS CodCliente,"
+					+ " cl.DNI AS DNICliente," + " cl.Nombre AS NomCliente," + " cl.Apellido AS ApellidoCliente,"
+					+ " cl.Sexo AS SexoCliente" + " FROM" + " Entrada AS e"
+					+ " JOIN Proyeccion AS p ON e.Proyeccion_Codigo = p.Codigo"
+					+ " JOIN Cliente AS cl ON e.Cliente_Codigo = cl.Codigo"
+					+ " JOIN Pelicula AS pe ON p.Pelicula_Codigo = pe.Codigo"
+					+ " JOIN Sala AS s ON p.Sala_Codigo = s.Codigo" + " JOIN Cine AS c ON s.Cine_Codigo = c.Codigo"
+					+ " WHERE" + " cl.Codigo =  '" + clienteDado.getCodigo() + "'" + " AND e.Fecha_Compra = '" + fecha
+					+ "'";
+
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+
+				// Si es necesario, inicializamos la lista
+				if (null == ret) {
+					ret = new ArrayList<Entrada>();
+				}
+
+				Entrada entrada = new Entrada();
+
+				entrada.setCodigo(resultSet.getInt(1));
+				entrada.setFechaCompra(resultSet.getDate(2)); // En el POJO guardamos SQL Date por lo que no hace falta
+																// comvertirla
+				entrada.setHoraCompra(resultSet.getTime(3).toLocalTime());
+
+				Proyeccion proyeccion = new Proyeccion();
+				proyeccion.setCodigo(resultSet.getInt(4));
+				proyeccion.setFecha(resultSet.getDate(5));
+				proyeccion.setHorario(resultSet.getTime(6).toLocalTime());
+				proyeccion.setPrecio(resultSet.getDouble(7));
+
+				Sala sala = new Sala();
+				sala.setCodigo(resultSet.getInt(8));
+				sala.setNombre(resultSet.getString(9));
+
+				Cine cine = new Cine();
+				cine.setCodigo(resultSet.getInt(10));
+				cine.setNombre(resultSet.getString(11));
+				cine.setDireccion(resultSet.getString(12));
+
+				sala.setCine(cine);
+
+				proyeccion.setSala(sala);
+
+				Pelicula pelicula = new Pelicula();
+				pelicula.setCodigo(resultSet.getInt(13));
+				pelicula.setCoste(resultSet.getDouble(14));
+				pelicula.setDuracion(resultSet.getTime(15).toLocalTime());
+				pelicula.setGenero(resultSet.getString(16));
+				pelicula.setTitulo(resultSet.getString(17));
+
+				proyeccion.setPelicula(pelicula);
+
+				Cliente cliente = new Cliente();
+				cliente.setCodigo(resultSet.getInt(18));
+				cliente.setDni(resultSet.getString(19));
+				cliente.setNombre(resultSet.getString(20));
+				cliente.setApellido(resultSet.getString(21));
+				cliente.setSexo(resultSet.getString(22));
+
+				entrada.setCliente(cliente);
+				entrada.setProyeccion(proyeccion);
+
+				ret.add(entrada);
+
+			}
+		} catch (SQLException sqle) {
+			System.out.println("Error con la BBDD - " + sqle.getMessage());
+		} catch (Exception e) {
+			System.out.println("Error generico - " + e.getMessage());
+		} finally {
+			try {
+				if (resultSet != null)
+					resultSet.close();
+			} catch (Exception e) {
+				// No hace falta
+			}
+			;
+			try {
+				if (statement != null)
+					statement.close();
+			} catch (Exception e) {
+				// No hace falta
+			}
+			;
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (Exception e) {
+				// No hace falta
+			}
+			;
+		}
+		return ret;
 	}
 }
