@@ -729,11 +729,9 @@ public class GestorBasesDeDatos {
 	}
 
 	public boolean comprobarEntrada(Cliente cliente, ArrayList<Proyeccion> proyeccionesSeleccionadas) {
-		String sql = "SELECT *" + "FROM Proyeccion pr " + "join Sala s on pr.Sala_Codigo=s.Codigo "
-				+ "join Entrada e on e.Proyeccion_Codigo = pr.Codigo "
-				+ "join Cliente c on e.Cliente_Codigo = c.Codigo" 
-				+ "WHERE c.DNI = '" + cliente.getDni() + "'"
-				+ "AND pr.Codigo = '" + proyeccionesSeleccionadas.get(0).getCodigo() + "'";
+		String sql = "SELECT * " + "FROM Entrada e "  
+				+ "WHERE e.Cliente_Codigo = '" + cliente.getCodigo() + "'"
+				+ "AND e.Proyeccion_Codigo = '" + proyeccionesSeleccionadas.get(0).getCodigo() + "'";
 
 		Connection connection = null;
 		Statement statement = null;
@@ -775,7 +773,7 @@ public class GestorBasesDeDatos {
 			}
 			;
 		}
-		return false;
+		return false;	
 	}
 	
 	public ArrayList<Entrada> sacarEntradas(Cliente clienteDado, ArrayList<Proyeccion> proyeccionesSeleccionadas) {
