@@ -230,7 +230,7 @@ public class Ventanas {
 		btnFinalizarCompra.setBounds(401, 25, 188, 23);
 		panelSeleccionCine.add(btnFinalizarCompra);
 
-		JButton btnCancelarSeleccionCine = new JButton("Cancelar");
+		JButton btnCancelarSeleccionCine = new JButton("Borrar datos");
 		btnCancelarSeleccionCine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cliente = null;
