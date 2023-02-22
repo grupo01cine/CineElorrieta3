@@ -108,25 +108,25 @@ class Sprint3Tests {
 		cliente.setCodigo(13);
 		cliente.setDni("87654321B");
 		cliente.setNombre("Pepe");
-		cliente.setApellido("Marton");
+		cliente.setApellido("Martin");
 		cliente.setSexo("Hombre");
 		cliente.setPasswd("admin");
 		cliente.setEntradas(null);
-		
-		String fechaDada = "2023-03-01";  
-	    Date fecha = null;
+
+		String fechaDada = "2023-03-01";
+		Date fecha = null;
 		try {
 			fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fechaDada);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	    String horaDada = "18:00";
-	    LocalTime hora = LocalTime.parse(horaDada);
-		
+
+		String horaDada = "18:00";
+		LocalTime hora = LocalTime.parse(horaDada);
+
 		ArrayList<Proyeccion> proyeccionesSeleccionadas = new ArrayList<Proyeccion>();
 		Proyeccion proyec = new Proyeccion();
+		proyec.setCodigo(1);
 		proyec.setFecha(fecha);
 		proyec.setHorario(hora);
 		Pelicula pelicula = new Pelicula();
@@ -136,24 +136,24 @@ class Sprint3Tests {
 		Sala sala = new Sala();
 		sala.setCodigo(1);
 		proyec.setSala(sala);
-		
+
 		proyeccionesSeleccionadas.add(proyec);
-		
+
 		metodosBaseDatos.insertarEntrada(cliente, proyeccionesSeleccionadas);
-		
+
 		assertTrue(metodosBaseDatos.comprobarEntrada(cliente, proyeccionesSeleccionadas));
 	}
 
 	@Test
 	void testCreacionCorrectaDelArchivo() {
 //		Creo un arrayList con una entrada
-		//Primero creo la entrada
+		// Primero creo la entrada
 		Entrada entrada = new Entrada();
 
 		entrada.setCodigo(324);
 		java.util.Date fecha2 = new java.util.Date();
 		entrada.setFechaCompra(fecha2); // En el POJO guardamos SQL Date por lo que no hace falta
-														// comvertirla
+										// comvertirla
 		String hora = "12:00";
 		entrada.setHoraCompra(LocalTime.parse(hora));
 
@@ -198,21 +198,20 @@ class Sprint3Tests {
 		entrada.setCliente(cliente);
 		entrada.setProyeccion(proyeccion);
 
-		ArrayList<Entrada> entradas= new ArrayList<Entrada>();
+		ArrayList<Entrada> entradas = new ArrayList<Entrada>();
 		entradas.add(entrada);
-		
-		
+
 		GestorFicheros gestorficheros = new GestorFicheros();
 		gestorficheros.crearNuevoTicket(entradas);
-		
+
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String fech = dateFormat.format(date);
-		
+
 		String RUTA_CARPETA = System.getProperty("user.home") + "/Desktop/";
 		File fich = new File(RUTA_CARPETA + "Entradas_Cine_" + fech + ".txt");
-		
+
 		assertEquals(true, fich.exists());
 	}
-	
+
 }
