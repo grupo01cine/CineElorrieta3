@@ -60,7 +60,7 @@ public class Ventanas {
 	private JTable tablePeliculas;
 	private JComboBox<String> comboBoxCines;
 	private JComboBox<Date> comboBoxFechas;
-	private JTable tableSesiones;
+	private JTable tableSesiones; 
 	private JTable tableResumen;
 
 	private JLabel lblSesiones = null;
@@ -169,6 +169,7 @@ public class Ventanas {
 				ArrayList<Pelicula> peliculas = gestorbbdd.sacarTodasLasPeliculas(cineSeleccionado);
 
 				// Creación de la tabla de películas por cine (en panel PELICULA)
+				tablePeliculas.setDefaultEditor(Object.class, null);
 				DefaultTableModel model = (DefaultTableModel) tablePeliculas.getModel();
 				model.setRowCount(0);
 				for (int i = 0; i < peliculas.size(); i++) {
@@ -375,6 +376,7 @@ public class Ventanas {
 
 				// Creamos la tabla de sesiones disponibles para el cine y peli elegidas en la
 				// fecha seleccionada
+				tableSesiones.setDefaultEditor(Object.class, null);
 				tableSesiones.setModel(
 						new DefaultTableModel(new Object[][] {}, new String[] { "Horario", "Precio", "Sala" }));
 				DefaultTableModel model = (DefaultTableModel) tableSesiones.getModel();
