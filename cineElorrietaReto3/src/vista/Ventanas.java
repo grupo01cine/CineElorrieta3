@@ -1,7 +1,6 @@
 package vista;
 
 import java.awt.Font;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -35,12 +34,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
+import java.awt.Color;
 
 public class Ventanas {
-	
-	private GestorUsuarios gestor=null;
-	private GestorBasesDeDatos gestorbbdd=null;
-	private GestorVentanas gestorventanas=null;
+
+	private GestorUsuarios gestor = null;
+	private GestorBasesDeDatos gestorbbdd = null;
+	private GestorVentanas gestorventanas = null;
 
 	private String peliculaSeleccionada = null;
 	private String cineSeleccionado = null;
@@ -62,11 +62,12 @@ public class Ventanas {
 	private JComboBox<Date> comboBoxFechas;
 	private JTable tableSesiones;
 	private JTable tableResumen;
-	
-	private JLabel lblSesiones = null;			
+
+	private JLabel lblSesiones = null;
 	private JTextField textFieldTotal;
 	private JTextField textFieldDescuento;
 	private JTextField textFieldPrecioFinal;
+	private JLabel labelSeleccionCine;
 
 	/**
 	 * Create the application.
@@ -85,13 +86,14 @@ public class Ventanas {
 	private void initialize() {
 		frame = new JFrame();
 
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventanas.class.getResource("/img/logo.png")));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventanas.class.getResource("/img/logoIcono.png")));
 		frame.setBounds(100, 100, 632, 390);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
 //		Panel Inicio
 		panelInicio = new JPanel();
+		panelInicio.setBackground(new Color(0, 128, 192));
 		panelInicio.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -130,23 +132,29 @@ public class Ventanas {
 		panelInicio.add(btnIniciar);
 
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(Ventanas.class.getResource("/img/logo.png")));
-		lblNewLabel.setBounds(44, 33, 305, 279);
+		lblNewLabel.setBackground(new Color(255, 255, 255));
+		lblNewLabel.setIcon(new ImageIcon(Ventanas.class.getResource("/img/logoTrans2.png")));
+		lblNewLabel.setBounds(41, 41, 305, 279);
 		panelInicio.add(lblNewLabel);
 
 //		panel Seleccion Cine
 		panelSeleccionCine = new JPanel();
+		panelSeleccionCine.setBackground(new Color(0, 128, 192));
 		panelSeleccionCine.setBounds(0, 0, 616, 351);
 		frame.getContentPane().add(panelSeleccionCine);
 		panelSeleccionCine.setLayout(null);
 		panelSeleccionCine.setVisible(false);
 
-		Label labelSeleccionCine = new Label("Seleccione un cine...");
-		labelSeleccionCine.setBounds(57, 102, 202, 22);
+		labelSeleccionCine = new JLabel("Seleccione un cine:");
+		labelSeleccionCine.setForeground(new Color(0, 0, 0));
+		labelSeleccionCine.setOpaque(true);
+		labelSeleccionCine.setBackground(new Color(0, 128, 192, 0));
+		labelSeleccionCine.setFont(new Font("Dialog", Font.PLAIN, 23));
+		labelSeleccionCine.setBounds(103, 139, 210, 35);
 		panelSeleccionCine.add(labelSeleccionCine);
 
 		comboBoxCines = new JComboBox<String>();
-		comboBoxCines.setBounds(265, 102, 246, 22);
+		comboBoxCines.setBounds(323, 150, 246, 22);
 		panelSeleccionCine.add(comboBoxCines);
 		cines = gestorbbdd.sacarTodosLosCines();
 		for (int i = 0; i < cines.size(); i++) {
@@ -175,7 +183,7 @@ public class Ventanas {
 				panelSeleccionPelicula.setVisible(true);
 			}
 		});
-		btnAceptarSeleccionCine.setBounds(94, 208, 188, 23);
+		btnAceptarSeleccionCine.setBounds(125, 303, 188, 23);
 		panelSeleccionCine.add(btnAceptarSeleccionCine);
 
 		JButton btnFinalizarCompra = new JButton("Finalizar compra");
@@ -183,26 +191,27 @@ public class Ventanas {
 			public void actionPerformed(ActionEvent e) {
 
 				if (proyeccionesSeleccionadas == null) {
-					  Thread t1 = new Thread(new Runnable() {
-			                public void run() {
-			                    try {
-			                        Thread.sleep(2000);
-			                    } catch (InterruptedException e) {
-			                        e.printStackTrace();
-			                    }               
-			                    JOptionPane.getRootFrame().dispose();
-			                }
-			            });
-			            t1.start();
-			            JOptionPane.showOptionDialog(null, "No hay películas seleccionadas. Cerrando aplicación...",""
-								+ "Aviso", JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);
-			            System.exit(0);
+					Thread t1 = new Thread(new Runnable() {
+						public void run() {
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							JOptionPane.getRootFrame().dispose();
+						}
+					});
+					t1.start();
+					JOptionPane.showOptionDialog(null, "No hay películas seleccionadas. Cerrando aplicación...",
+							"" + "Aviso", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+							new Object[] {}, null);
+					System.exit(0);
 				} else {
 					// Creamos la tabla resumen
 					gestorventanas.vaciarTabla(tableResumen);
 
-					tableResumen.setModel(
-							new DefaultTableModel(new Object[][] {}, new String[] { "T\u00EDtulo", "Sesion", "Sala", "Precio" }));
+					tableResumen.setModel(new DefaultTableModel(new Object[][] {},
+							new String[] { "T\u00EDtulo", "Sesion", "Sala", "Precio" }));
 					DefaultTableModel model = (DefaultTableModel) tableResumen.getModel();
 					model.setRowCount(0);
 					for (int i = 0; i < proyeccionesSeleccionadas.size(); i++) {
@@ -213,8 +222,8 @@ public class Ventanas {
 						String precio = proyeccion.getPrecio().toString();
 
 						model.addRow(new String[] { titulo, horario, Integer.toString(salaPr), precio });
-						
-						//Rellenamos PRECIO
+
+						// Rellenamos PRECIO
 						Double precioTotal = gestorventanas.sacarPrecioTotal(tableResumen);
 						textFieldTotal.setText(precioTotal.toString());
 						textFieldDescuento.setText(gestorventanas.sacarPorcentaje(tableResumen));
@@ -227,30 +236,37 @@ public class Ventanas {
 				}
 			}
 		});
-		btnFinalizarCompra.setBounds(401, 25, 188, 23);
+		btnFinalizarCompra.setBounds(418, 11, 188, 23);
 		panelSeleccionCine.add(btnFinalizarCompra);
 
-		JButton btnCancelarSeleccionCine = new JButton("Borrar datos");
+		JButton btnCancelarSeleccionCine = new JButton("Cancelar");
 		btnCancelarSeleccionCine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cliente = null;
-		    	proyeccionesSeleccionadas = null;
+				proyeccionesSeleccionadas = null;
 				panelSeleccionCine.setVisible(false);
 				panelInicio.setVisible(true);
 			}
 		});
-		btnCancelarSeleccionCine.setBounds(341, 208, 188, 23);
+		btnCancelarSeleccionCine.setBounds(323, 303, 188, 23);
 		panelSeleccionCine.add(btnCancelarSeleccionCine);
+
+		JLabel lblBG1 = new JLabel("");
+		lblBG1.setIcon(new ImageIcon(Ventanas.class.getResource("/img/pbg3.png")));
+		lblBG1.setBounds(0, 0, 616, 351);
+		panelSeleccionCine.add(lblBG1);
 
 //		Panel Selección Pelicula
 		panelSeleccionPelicula = new JPanel();
+		panelSeleccionPelicula.setBackground(new Color(0, 128, 192));
 		panelSeleccionPelicula.setBounds(0, 0, 616, 351);
 		frame.getContentPane().add(panelSeleccionPelicula);
 		panelSeleccionPelicula.setLayout(null);
 		panelSeleccionPelicula.setVisible(false);
 
-		JLabel lblSeleccionPelicula = new JLabel("Seleccione una película...");
-		lblSeleccionPelicula.setBounds(47, 62, 180, 14);
+		JLabel lblSeleccionPelicula = new JLabel("Seleccione una película:");
+		lblSeleccionPelicula.setFont(new Font("Tahoma", Font.PLAIN, 23));
+		lblSeleccionPelicula.setBounds(47, 11, 283, 40);
 		panelSeleccionPelicula.add(lblSeleccionPelicula);
 
 		JButton btnAceptarSeleccionPelicula = new JButton("Aceptar");
@@ -266,14 +282,14 @@ public class Ventanas {
 					Date fecha = proyecciones.get(i).getFecha();
 					comboBoxFechas.addItem(fecha);
 				}
-				
+
 				gestorventanas.vaciarTabla(tableSesiones);
 				panelSeleccionPelicula.setVisible(false);
-				lblSesiones.setText("Seleccione una sesión para la película '"+ peliculaSeleccionada +"'...");
+				lblSesiones.setText("Seleccione una sesión para la película '" + peliculaSeleccionada + "'...");
 				panelSeleccionSesion.setVisible(true);
 			}
 		});
-		btnAceptarSeleccionPelicula.setBounds(172, 270, 130, 23);
+		btnAceptarSeleccionPelicula.setBounds(160, 298, 130, 23);
 		panelSeleccionPelicula.add(btnAceptarSeleccionPelicula);
 
 		JButton btnCancelarSeleccionPelicula = new JButton("Cancelar");
@@ -284,11 +300,11 @@ public class Ventanas {
 				panelSeleccionCine.setVisible(true);
 			}
 		});
-		btnCancelarSeleccionPelicula.setBounds(346, 270, 142, 23);
+		btnCancelarSeleccionPelicula.setBounds(300, 298, 142, 23);
 		panelSeleccionPelicula.add(btnCancelarSeleccionPelicula);
 
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(47, 87, 531, 160);
+		scrollPane_1.setBounds(47, 51, 524, 224);
 		panelSeleccionPelicula.add(scrollPane_1);
 
 		tablePeliculas = new JTable();
@@ -298,35 +314,37 @@ public class Ventanas {
 
 //		Panel Seleccion Sesion
 		panelSeleccionSesion = new JPanel();
+		panelSeleccionSesion.setBackground(new Color(0, 128, 192));
 		panelSeleccionSesion.setBounds(0, 0, 616, 351);
 		frame.getContentPane().add(panelSeleccionSesion);
 		panelSeleccionSesion.setLayout(null);
 		panelSeleccionSesion.setVisible(false);
 
 		lblSesiones = new JLabel();
+		lblSesiones.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lblSesiones.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSesiones.setBounds(10, 18, 596, 14);
+		lblSesiones.setBounds(10, 0, 596, 32);
 		panelSeleccionSesion.add(lblSesiones);
 
-		JButton btnAceptarSesion = new JButton("Aceptar");
+		JButton btnAceptarSesion = new JButton("Confirmar");
 		btnAceptarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int fila = tableSesiones.getSelectedRow();
 				String hora = (String) tableSesiones.getValueAt(fila, 0);
 				JOptionPane.showMessageDialog(btnAceptarSesion, "Ha seleccionado la película " + peliculaSeleccionada
-						+ " a fecha de " + fechaSeleccionada + " a las " + hora, "Confirmación", 1);				
+						+ " a fecha de " + fechaSeleccionada + " a las " + hora, "Confirmación", 1);
 				Proyeccion proyeccion = gestorbbdd.sacarResumen(peliculaSeleccionada, fechaSeleccionada, hora);
 				if (null == proyeccionesSeleccionadas) {
 					proyeccionesSeleccionadas = new ArrayList<Proyeccion>();
 				}
-				proyeccionesSeleccionadas.add(proyeccion);				
-				
+				proyeccionesSeleccionadas.add(proyeccion);
+
 				panelSeleccionSesion.setVisible(false);
 				panelSeleccionCine.setVisible(true);
-				
+
 			}
 		});
-		btnAceptarSesion.setBounds(211, 287, 89, 23);
+		btnAceptarSesion.setBounds(336, 287, 89, 23);
 		panelSeleccionSesion.add(btnAceptarSesion);
 
 		JButton btnSesion = new JButton("Cancelar");
@@ -336,18 +354,19 @@ public class Ventanas {
 				panelSeleccionPelicula.setVisible(true);
 			}
 		});
-		btnSesion.setBounds(350, 287, 89, 23);
+		btnSesion.setBounds(435, 287, 89, 23);
 		panelSeleccionSesion.add(btnSesion);
 
 		JLabel lblElegirFecha = new JLabel("Seleccione una fecha:");
-		lblElegirFecha.setBounds(10, 107, 190, 14);
+		lblElegirFecha.setFont(new Font("Tahoma", Font.PLAIN, 23));
+		lblElegirFecha.setBounds(10, 81, 233, 40);
 		panelSeleccionSesion.add(lblElegirFecha);
 
 		comboBoxFechas = new JComboBox<Date>();
 		comboBoxFechas.setBounds(10, 132, 190, 22);
 		panelSeleccionSesion.add(comboBoxFechas);
 
-		JButton btnConfirmarFecha = new JButton("Confirmar");
+		JButton btnConfirmarFecha = new JButton("Cambiar\r\n fecha");
 		btnConfirmarFecha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				fechaSeleccionada = (Date) comboBoxFechas.getSelectedItem();
@@ -355,8 +374,9 @@ public class Ventanas {
 						peliculaSeleccionada, fechaSeleccionada);
 
 				// Creamos la tabla de sesiones disponibles para el cine y peli elegidas en la
-				// fecha seleccionada				
-				tableSesiones.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Horario", "Precio", "Sala" }));
+				// fecha seleccionada
+				tableSesiones.setModel(
+						new DefaultTableModel(new Object[][] {}, new String[] { "Horario", "Precio", "Sala" }));
 				DefaultTableModel model = (DefaultTableModel) tableSesiones.getModel();
 				model.setRowCount(0);
 				for (int i = 0; i < proyecciones.size(); i++) {
@@ -373,15 +393,20 @@ public class Ventanas {
 		panelSeleccionSesion.add(btnConfirmarFecha);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(236, 43, 370, 227);
+		scrollPane.setBounds(236, 40, 370, 230);
 		panelSeleccionSesion.add(scrollPane);
 
 		tableSesiones = new JTable();
 		scrollPane.setViewportView(tableSesiones);
-		
+
+		JLabel lblNewLabel_1 = new JLabel("\r\n");
+		lblNewLabel_1.setIcon(new ImageIcon(Ventanas.class.getResource("/img/Palomitas.png")));
+		lblNewLabel_1.setBounds(-136, 59, 378, 292);
+		panelSeleccionSesion.add(lblNewLabel_1);
 
 //		Panel Resumen Compra
 		panelResumenCompra = new JPanel();
+		panelResumenCompra.setBackground(new Color(0, 128, 192));
 		panelResumenCompra.setBounds(0, 0, 616, 351);
 		frame.getContentPane().add(panelResumenCompra);
 		panelResumenCompra.setLayout(null);
@@ -392,15 +417,18 @@ public class Ventanas {
 		panelResumenCompra.add(lblResumenCompra);
 
 		JLabel lblTotal = new JLabel("Total:");
-		lblTotal.setBounds(412, 208, 73, 14);
+		lblTotal.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblTotal.setBounds(41, 211, 73, 17);
 		panelResumenCompra.add(lblTotal);
 
 		JLabel lblDescuento = new JLabel("Descuento:");
-		lblDescuento.setBounds(412, 233, 73, 14);
+		lblDescuento.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblDescuento.setBounds(41, 239, 106, 25);
 		panelResumenCompra.add(lblDescuento);
 
 		JLabel lblPrecioFinal = new JLabel("Precio final:");
-		lblPrecioFinal.setBounds(412, 258, 73, 14);
+		lblPrecioFinal.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPrecioFinal.setBounds(41, 275, 106, 19);
 		panelResumenCompra.add(lblPrecioFinal);
 
 		JButton btnComprarResumen = new JButton("Finalizar compra");
@@ -410,7 +438,7 @@ public class Ventanas {
 				panelLogin.setVisible(true);
 			}
 		});
-		btnComprarResumen.setBounds(150, 287, 150, 23);
+		btnComprarResumen.setBounds(149, 317, 150, 23);
 		panelResumenCompra.add(btnComprarResumen);
 
 		JButton btnCancelarResumen = new JButton("Cancelar");
@@ -420,24 +448,24 @@ public class Ventanas {
 				panelSeleccionCine.setVisible(true);
 			}
 		});
-		btnCancelarResumen.setBounds(350, 287, 150, 23);
+		btnCancelarResumen.setBounds(319, 317, 150, 23);
 		panelResumenCompra.add(btnCancelarResumen);
 
 		textFieldTotal = new JTextField();
 		textFieldTotal.setEditable(false);
-		textFieldTotal.setBounds(495, 208, 86, 20);
+		textFieldTotal.setBounds(149, 213, 86, 20);
 		panelResumenCompra.add(textFieldTotal);
 		textFieldTotal.setColumns(10);
 
 		textFieldDescuento = new JTextField();
 		textFieldDescuento.setEditable(false);
-		textFieldDescuento.setBounds(495, 230, 86, 20);
+		textFieldDescuento.setBounds(149, 245, 86, 20);
 		panelResumenCompra.add(textFieldDescuento);
 		textFieldDescuento.setColumns(10);
 
 		textFieldPrecioFinal = new JTextField();
 		textFieldPrecioFinal.setEditable(false);
-		textFieldPrecioFinal.setBounds(495, 255, 86, 20);
+		textFieldPrecioFinal.setBounds(149, 278, 86, 20);
 		panelResumenCompra.add(textFieldPrecioFinal);
 		textFieldPrecioFinal.setColumns(10);
 
@@ -448,10 +476,15 @@ public class Ventanas {
 		tableResumen = new JTable();
 		tableResumen.setEnabled(false);
 		scrollPane_2.setViewportView(tableResumen);
-		
+
+		JLabel lblImagenTicket = new JLabel("\r\n");
+		lblImagenTicket.setIcon(new ImageIcon(Ventanas.class.getResource("/img/ticket.png")));
+		lblImagenTicket.setBounds(259, 161, 357, 293);
+		panelResumenCompra.add(lblImagenTicket);
 
 //		Panel Registro
 		panelRegistro = new JPanel();
+		panelRegistro.setBackground(new Color(0, 128, 192));
 		panelRegistro.setBounds(0, 0, 616, 351);
 		frame.getContentPane().add(panelRegistro);
 		panelRegistro.setLayout(null);
@@ -556,6 +589,7 @@ public class Ventanas {
 
 //		Panel Login
 		panelLogin = new JPanel();
+		panelLogin.setBackground(new Color(0, 128, 192));
 		panelLogin.setBounds(0, 0, 616, 351);
 		frame.getContentPane().add(panelLogin);
 		panelLogin.setLayout(null);
@@ -587,62 +621,65 @@ public class Ventanas {
 			public void actionPerformed(ActionEvent e) {
 				String dni = textFieldUsuarioInicioSesion.getText();
 				String contrasena = String.valueOf(textFieldContrasenaInicioSesion.getPassword());
-				
-				if(gestor.loginUsuario(dni, contrasena)==true) {
-					int resp=JOptionPane.showConfirmDialog(btnAceptarInicioSesion,"¿Desea comprar las entradas?",  "Finalizar Compra", JOptionPane.YES_NO_OPTION, 1);
-				      if (JOptionPane.OK_OPTION == resp){
-//				    	  Sí compra las entradas
-				    	  ArrayList<Cliente> todosLosClientes = new ArrayList<Cliente>();
-				    	  todosLosClientes = gestorbbdd.sacarTodosLosClientes();
-				    	  
-				    	  for(int i=0; i<todosLosClientes.size(); i++) {
-				    		  if(dni.equalsIgnoreCase(todosLosClientes.get(i).getDni())) {
-				    			  cliente = todosLosClientes.get(i);  
-				    		  }
-				    	  }				    	  				    	  
-				    	  gestorbbdd.insertarEntrada(cliente, proyeccionesSeleccionadas);
-				    	  
-//				    	  Preguntamos si quiere factura
-				    	  int fac =JOptionPane.showConfirmDialog(null,"¿Desea recibir la factura?",  "Finalizar Compra", JOptionPane.YES_NO_OPTION, 1);
-					      if (JOptionPane.OK_OPTION == fac){
-					    	  GestorFicheros fich = new GestorFicheros();
-					    	  ArrayList<Entrada> listaEntradas =  gestorbbdd.sacarEntradas(cliente, proyeccionesSeleccionadas);
-					    	  fich.crearNuevoTicket(listaEntradas);
-					    	  
-					    	  JOptionPane.showMessageDialog(null, "Factura generada correctamente", "Confirmación", 1);
-					      }
-				    	  
-				    	  JOptionPane.showMessageDialog(null, "Compra realizada. ¡Muchas gracias!", "Confirmación", 1);
 
-				    	  cliente = null;
-				    	  proyeccionesSeleccionadas = null;
-				    	  
-				    	  panelLogin.setVisible(false);
-				          panelInicio.setVisible(true);
-				      }
-				      else{
+				if (gestor.loginUsuario(dni, contrasena) == true) {
+					int resp = JOptionPane.showConfirmDialog(btnAceptarInicioSesion, "¿Desea comprar las entradas?",
+							"Finalizar Compra", JOptionPane.YES_NO_OPTION, 1);
+					if (JOptionPane.OK_OPTION == resp) {
+//				    	  Sí compra las entradas
+						ArrayList<Cliente> todosLosClientes = new ArrayList<Cliente>();
+						todosLosClientes = gestorbbdd.sacarTodosLosClientes();
+
+						for (int i = 0; i < todosLosClientes.size(); i++) {
+							if (dni.equalsIgnoreCase(todosLosClientes.get(i).getDni())) {
+								cliente = todosLosClientes.get(i);
+							}
+						}
+						gestorbbdd.insertarEntrada(cliente, proyeccionesSeleccionadas);
+
+//				    	  Preguntamos si quiere factura
+						int fac = JOptionPane.showConfirmDialog(null, "¿Desea recibir la factura?", "Finalizar Compra",
+								JOptionPane.YES_NO_OPTION, 1);
+						if (JOptionPane.OK_OPTION == fac) {
+							GestorFicheros fich = new GestorFicheros();
+							ArrayList<Entrada> listaEntradas = gestorbbdd.sacarEntradas(cliente,
+									proyeccionesSeleccionadas);
+							fich.crearNuevoTicket(listaEntradas);
+
+							JOptionPane.showMessageDialog(null, "Factura generada correctamente", "Confirmación", 1);
+						}
+
+						JOptionPane.showMessageDialog(null, "Compra realizada. ¡Muchas gracias!", "Confirmación", 1);
+
+						cliente = null;
+						proyeccionesSeleccionadas = null;
+
+						panelLogin.setVisible(false);
+						panelInicio.setVisible(true);
+					} else {
 //				    	  No compra las entradas
-				    	  cliente = null;
-				    	  proyeccionesSeleccionadas = null;
-				    	  
-				    	  Thread t1 = new Thread(new Runnable() {
-				                public void run() {
-				                    try {
-				                        Thread.sleep(2000);
-				                    } catch (InterruptedException e) {
-				                        e.printStackTrace();
-				                    }               
-				                    JOptionPane.getRootFrame().dispose();
-				                }
-				            });
-				            t1.start();
-				            JOptionPane.showOptionDialog(null, "Cerrando sesión...",""
-									+ "Aviso", JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);
-				            
-				            panelLogin.setVisible(false);
-				            panelInicio.setVisible(true);
-				   }
-				}else {
+						cliente = null;
+						proyeccionesSeleccionadas = null;
+
+						Thread t1 = new Thread(new Runnable() {
+							public void run() {
+								try {
+									Thread.sleep(2000);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								JOptionPane.getRootFrame().dispose();
+							}
+						});
+						t1.start();
+						JOptionPane.showOptionDialog(null, "Cerrando sesión...", "" + "Aviso",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[] {},
+								null);
+
+						panelLogin.setVisible(false);
+						panelInicio.setVisible(true);
+					}
+				} else {
 					JOptionPane.showMessageDialog(btnAceptarRegistro, "Usuario o contraseña incorrectos", "Error", 0);
 					textFieldUsuarioInicioSesion.setText("");
 					textFieldContrasenaInicioSesion.setText("");
@@ -661,7 +698,7 @@ public class Ventanas {
 		});
 		btnCancelarInicioSesion.setBounds(346, 245, 89, 23);
 		panelLogin.add(btnCancelarInicioSesion);
-		
+
 		JButton btnRegistroLogin = new JButton("Registro");
 		btnRegistroLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
