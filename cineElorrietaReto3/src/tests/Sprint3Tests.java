@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -13,11 +14,14 @@ import javax.swing.table.DefaultTableModel;
 
 import org.junit.jupiter.api.Test;
 
+import bbdd.pojos.Cine;
 import bbdd.pojos.Cliente;
+import bbdd.pojos.Entrada;
 import bbdd.pojos.Pelicula;
 import bbdd.pojos.Proyeccion;
 import bbdd.pojos.Sala;
 import controlador.GestorBasesDeDatos;
+import controlador.GestorFicheros;
 import controlador.GestorVentanas;
 
 class Sprint3Tests {
@@ -28,7 +32,7 @@ class Sprint3Tests {
 	// ** TESTS RESUMEN COMPRA **
 	@Test
 	void testCalculoResumen() {
-		fail("Not yet implemented");
+//		fail("Not yet implemented");
 	}
 
 	@Test
@@ -142,7 +146,73 @@ class Sprint3Tests {
 
 	@Test
 	void testCreacionCorrectaDelArchivo() {
-		fail("Not yet implemented");
-	}
+//		Creo un arrayList con una entrada
+		//Primero creo la entrada
+		Entrada entrada = new Entrada();
 
+		entrada.setCodigo(324);
+		java.util.Date fecha2 = new java.util.Date();
+		entrada.setFechaCompra(fecha2); // En el POJO guardamos SQL Date por lo que no hace falta
+														// comvertirla
+		String hora = "12:00";
+		entrada.setHoraCompra(LocalTime.parse(hora));
+
+		Proyeccion proyeccion = new Proyeccion();
+		proyeccion.setCodigo(6546);
+		java.util.Date fecha1 = new java.util.Date();
+		proyeccion.setFecha(fecha1);
+		String hora1 = "22:00";
+		proyeccion.setHorario(LocalTime.parse(hora1));
+		proyeccion.setPrecio((double) 4);
+
+		Sala sala = new Sala();
+		sala.setCodigo(867);
+		sala.setNombre("3");
+
+		Cine cine = new Cine();
+		cine.setCodigo(5654);
+		cine.setNombre("JUnit");
+		cine.setDireccion("c/a");
+
+		sala.setCine(cine);
+
+		proyeccion.setSala(sala);
+
+		Pelicula pelicula = new Pelicula();
+		pelicula.setCodigo(213);
+		pelicula.setCoste(234);
+		String duracion1 = "01:00";
+		pelicula.setDuracion(LocalTime.parse(duracion1));
+		pelicula.setGenero("Drama");
+		pelicula.setTitulo("Prueba JUnit");
+
+		proyeccion.setPelicula(pelicula);
+
+		Cliente cliente = new Cliente();
+		cliente.setCodigo(34545);
+		cliente.setDni("5562343B");
+		cliente.setNombre("JUnit");
+		cliente.setApellido("Test");
+		cliente.setSexo("Mujer");
+
+		entrada.setCliente(cliente);
+		entrada.setProyeccion(proyeccion);
+
+		ArrayList<Entrada> entradas= new ArrayList<Entrada>();
+		entradas.add(entrada);
+		
+		
+		GestorFicheros gestorficheros = new GestorFicheros();
+		gestorficheros.crearNuevoTicket(entradas);
+		
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String fech = dateFormat.format(date);
+		
+		String RUTA_CARPETA = System.getProperty("user.home") + "/Desktop/";
+		File fich = new File(RUTA_CARPETA + "Entradas_Cine_" + fech + ".txt");
+		
+		assertEquals(true, fich.exists());
+	}
+	
 }

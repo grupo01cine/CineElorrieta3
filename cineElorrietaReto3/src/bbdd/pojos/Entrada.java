@@ -1,7 +1,7 @@
 package bbdd.pojos;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalTime;
 import java.util.Objects;
 
