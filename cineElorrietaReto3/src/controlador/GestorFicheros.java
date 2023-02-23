@@ -31,8 +31,6 @@ public class GestorFicheros {
 
 	}
 
-	
-
 	public void crearNuevoTicket(ArrayList<Entrada> entradaDada) {
 		if (null == entradaDada) {
 			return;
@@ -73,9 +71,9 @@ public class GestorFicheros {
 
 				acum++;
 			}
-
-			printWriter.println("Descuento: " + sacarDescuento(entradaDada));
-			printWriter.println("Precio Final: " + sacarPrecioFinal(entradaDada) + "€");
+			String descuento = sacarDescuento(entradaDada);
+			printWriter.println("Descuento: " + descuento);
+			printWriter.println("Precio Final: " + sacarPrecioFinal(entradaDada, descuento) + "€");
 
 		} catch (IOException e) {
 			System.out.println("IOException - Error de escritura en el fichero " + RUTA_CARPETA);
@@ -94,10 +92,10 @@ public class GestorFicheros {
 		String ret = "";
 		switch (entradaDada.size()) {
 		case 0:
-			ret = "Sin descuento";			
+			ret = "Sin descuento";
 			break;
 		case 1:
-			ret = "Sin descuento";			
+			ret = "Sin descuento";
 			break;
 		case 2:
 			ret = "20%";
@@ -109,19 +107,32 @@ public class GestorFicheros {
 			ret = "40%";
 			break;
 		default:
-			ret="50%";
+			ret = "50%";
 			break;
 		}
-		
+
 		return ret;
 	}
-	
-	private double sacarPrecioFinal(ArrayList<Entrada> entradaDada) {
+
+	private double sacarPrecioFinal(ArrayList<Entrada> entradaDada, String descuento) {
 		double sumaPrecios = 0;
-		for(Entrada entrada : entradaDada) {
+		for (Entrada entrada : entradaDada) {
 			sumaPrecios += entrada.getProyeccion().getPrecio();
 		}
-		
-		return sumaPrecios;
+
+		switch (descuento) {
+		case "Sin descuento":
+			return sumaPrecios;
+		case "20%":
+			return (sumaPrecios * 0.80);
+		case "30%":
+			return (sumaPrecios * 0.70);
+		case "40%":
+			return (sumaPrecios * 0.60);
+		case "50%":
+			return (sumaPrecios * 0.50);
+		default:
+			return (sumaPrecios * 0.50);
+		}
 	}
 }
